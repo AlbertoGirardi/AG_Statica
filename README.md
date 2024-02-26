@@ -5,6 +5,7 @@ Progetto PCTO, ITST J.F. Kennedy, 3^ A MP
 
 
 Programma per risoluzione di strutture statiche sottoposte a carichi noti.
+In sviluppo
 
 Per ulteriori informazioni riferirsi alla cartella [doc](/doc)
 
