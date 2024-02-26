@@ -1,3 +1,5 @@
+Parte teorica del progetto
+
 per ogni corpo -> forze e vincoli\
 |\
 v

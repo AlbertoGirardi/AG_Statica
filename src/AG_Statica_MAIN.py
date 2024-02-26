@@ -1,8 +1,9 @@
 #AG_Statica
 
-#Di Alberto Girardi
+#di Alberto Girardi
 
 
+import lib.AGS_corpi
 
 
 
