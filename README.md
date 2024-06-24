@@ -1,6 +1,7 @@
 # AG_Statica
 
 di Alberto Girardi
+tutor prof. Fucile Fabio
 Progetto PCTO, ITST J.F. Kennedy, 3^ A MP
 
 
