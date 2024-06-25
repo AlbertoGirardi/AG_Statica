@@ -3,8 +3,8 @@ import numpy as np
 
 import matplotlib.animation as animation
 
-dt = 1/24
-T = 6
+dt = 1/24   #refresh rate
+T = 6       #rotation period
 
 fig, ax = plt.subplots()
 
@@ -17,8 +17,8 @@ line2 = ax.plot(shape[0,:],shape[1,:],'o-b', label = "T=0")[0]
 
 
 
-ax.set(xlim=[-5, 10], ylim=[-5, 10], xlabel='X[m]', ylabel='Y [m]')
-ax.plot(0,0, marker = 'o',mfc = 'g')
+ax.set(xlim=[-5, 10], ylim=[-5, 10], xlabel='X[m]', ylabel='Y [m]')    #graph setup
+ax.plot(0,0, marker = 'o',mfc = 'g')   #arks the origin
 ax.legend()
 ax.grid(True)
 L=plt.legend(loc=1)
@@ -26,31 +26,30 @@ L=plt.legend(loc=1)
 
 xl = []
 yl = []
-v = np.array([1,1])
+v = np.array([1,1])   #velocity, xy vector
 
 
 for i in range(int(T/dt)):
-    print(dt*i)
+    #traslates the shape and saves the x and y coordinates of the points in respective list
     xl.append((shape + dt*i*v[:,np.newaxis])[0])
     yl.append((shape + dt*i*v[:,np.newaxis])[1])
 
    
-print(xl)
-print(yl)
+# print(xl)
+# print(yl)
 
-print(L.get_texts())
-
+# print(L.get_texts())
 
 def update(frame):  
     # for each frame, update the data stored on each artist.
 
-    # update the line plot:
-    line2.set_xdata(xl[frame])
+    # update the line plot to the shape at the current moment
+    line2.set_xdata(xl[frame])          
     line2.set_ydata(yl[frame])
-    L.get_texts()[0].set_text(f"T={round(frame*dt, 2)}")
+    L.get_texts()[0].set_text(f"T={round(frame*dt, 2)}")            #updates the live timer
     return (L, line2)
 
 print(dt,int(T/dt))
 
-ani = animation.FuncAnimation(fig=fig, func=update, frames=int(T/dt), interval=dt*1000)
+ani = animation.FuncAnimation(fig=fig, func=update, frames=int(T/dt), interval=dt*1000)             #creates the animation
 plt.show()
