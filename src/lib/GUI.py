@@ -16,5 +16,5 @@ def draw_polygon(shape, rotation_angle, position):
     ax.axis([-scale, scale, -scale, scale])
     ax.grid(True)
     ax.set_aspect('equal', adjustable='box')
-    plt.show()
+
 

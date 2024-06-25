@@ -5,7 +5,7 @@
 
 import lib.AGS_corpi
 import numpy as np
-
+import matplotlib.pyplot as plt
 
 
 
@@ -20,9 +20,14 @@ def MAIN():
     print(triangle_s[0,:])
     print(triangle_s[1,:])
 
-    posizione = np.array([1,1])
+    posizione = np.array([0,0])
     triangle = lib.AGS_corpi.Rigido(1, posizione,0, np.zeros(2), triangle_s, 0 )
     triangle.draw()
+
+    
+
+
+    plt.show()  #plots the plot
 
 
 

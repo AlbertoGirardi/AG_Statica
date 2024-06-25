@@ -1,5 +1,12 @@
-import numpy
+import numpy as np
 from . import GUI
+
+
+def rotation_matrix2D(alfa):
+    
+    RM2D= [[np.cos(alfa),-np.sin(alfa)],
+      [np.sin(alfa),np.cos(alfa)]]
+    return RM2D
 
 #classe base per un corpo
 
