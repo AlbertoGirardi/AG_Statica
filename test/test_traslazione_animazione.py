@@ -3,7 +3,7 @@ import numpy as np
 
 import matplotlib.animation as animation
 
-dt = 0.05
+dt = 0.04
 T = 6
 
 fig, ax = plt.subplots()
@@ -13,35 +13,44 @@ triangle_s = np.array([[1,0,-1,1], [0,1,0,0]])
 
 shape = triangle_s
 
-line2 = ax.plot(shape[0,:],shape[1,:],'o-b')[0]
+line2 = ax.plot(shape[0,:],shape[1,:],'o-b', label = "T=0")[0]
 
-ax.set(xlim=[-5, 10], ylim=[-5, 10], xlabel='Time [s]', ylabel='Z [m]')
+
+
+ax.set(xlim=[-5, 10], ylim=[-5, 10], xlabel='X[m]', ylabel='Y [m]')
+ax.plot(0,0, marker = 'o',mfc = 'g')
 ax.legend()
 ax.grid(True)
+L=plt.legend(loc=1)
 
-xx = []
-yy = []
-vy = np.array([0,1])
-vx = np.array([1,0])
+
+xl = []
+yl = []
+v = np.array([1,1])
+
 
 for i in range(int(T/dt)):
     print(dt*i)
-    xx.append((shape + dt*i*vx[:,np.newaxis])[0])
-    yy.append((shape + dt*i*vy[:,np.newaxis])[1])
+    xl.append((shape + dt*i*v[:,np.newaxis])[0])
+    yl.append((shape + dt*i*v[:,np.newaxis])[1])
 
    
-print(xx)
-print(yy)
+print(xl)
+print(yl)
+
+print(L.get_texts())
 
 
 def update(frame):  
     # for each frame, update the data stored on each artist.
 
     # update the line plot:
-    line2.set_xdata(xx[frame])
-    line2.set_ydata(yy[frame])
-    return ( line2)
+    line2.set_xdata(xl[frame])
+    line2.set_ydata(yl[frame])
+    L.get_texts()[0].set_text(f"T={round(frame*dt, 2)}")
+    return (L, line2)
 
+print(dt,int(T/dt))
 
 ani = animation.FuncAnimation(fig=fig, func=update, frames=int(T/dt), interval=dt*1000)
 plt.show()
