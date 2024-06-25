@@ -3,7 +3,7 @@ import numpy as np
 
 import matplotlib.animation as animation
 
-dt = 0.04
+dt = 1/24
 T = 6
 
 fig, ax = plt.subplots()
