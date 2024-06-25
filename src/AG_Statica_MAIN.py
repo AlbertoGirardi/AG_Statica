@@ -20,11 +20,15 @@ def MAIN():
     print(triangle_s[0,:])
     print(triangle_s[1,:])
 
-    posizione = np.array([0,0])
-    triangle = lib.AGS_corpi.Rigido(1, posizione,0, np.zeros(2), triangle_s, 0 )
-    triangle.draw()
+    posizione = np.array([1,1])
+    angolo = np.pi/2      #radianti
 
+    triangle = lib.AGS_corpi.Rigido(1, posizione,angolo, np.zeros(2), 1,triangle_s, 0 )
     
+    triangle.run_Physics()
+
+    triangle.draw(plt.subplots())
+
 
 
     plt.show()  #plots the plot
