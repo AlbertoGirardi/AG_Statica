@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.animation as animation
 
 dt = 1/24   #refresh rate
-T = 6       #rotation period
+T = 6       #total time of the animation
 
 fig, ax = plt.subplots()
 
@@ -49,7 +49,7 @@ def update(frame):
     L.get_texts()[0].set_text(f"T={round(frame*dt, 2)}")            #updates the live timer
     return (L, line2)
 
-print(dt,int(T/dt))
+print(dt,int(T/dt), dt*int(T/dt))
 
 ani = animation.FuncAnimation(fig=fig, func=update, frames=int(T/dt), interval=dt*1000)             #creates the animation
 plt.show()

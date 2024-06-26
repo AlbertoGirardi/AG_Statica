@@ -21,7 +21,7 @@ def MAIN():
     print(triangle_s[1,:])
 
     posizione = np.array([1,1])
-    angolo = np.pi/2      #radianti
+    angolo = np.pi/3      #radianti
 
     triangle = lib.AGS_corpi.Rigido(1, posizione,angolo, np.zeros(2), 1,triangle_s, 0 )
     

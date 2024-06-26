@@ -30,9 +30,3 @@ def draw_polygon(plot, shape, rotation_angle, position):
     ax.set_aspect('equal', adjustable='box')
 
 
-
-
-def plot_rotating_polygon(plot, shape, rotation_angle, position):
-
-    fig,ax = plot
-    ani = animation.FuncAnimation(fig, draw_polygon, frames=50,  blit=True, interval = 50)
