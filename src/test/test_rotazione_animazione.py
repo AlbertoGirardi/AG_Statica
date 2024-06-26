@@ -16,7 +16,7 @@ T = 10                  #rotation period
 fig, ax = plt.subplots()
 
 
-triangle_s = np.array([[1,0,-1,-1,1], [0,1,1,0,0]])         #shape
+triangle_s = np.array([[0,1,0,-1,1], [0,0,1,0,0]])         #shape
 
 shape = triangle_s
 
@@ -37,14 +37,16 @@ yl = []
 w = -2*np.pi/T               #angular velocity, caluculated from the period
 print(w)
 
+v = np.array([0.1,0.1])   #velocity, xy vector
+
 
 for i in range(int(T/dt)):
     # print(dt*i)
 
     Rot = rotation_matrix2D(dt*i*w)    #generates a rotation matrix, for the give angle at the time
 
-    xl.append((Rot@shape)[0])           #rotates the orginal shape according to the rot matrix and saves each different rotation
-    yl.append((Rot@shape)[1])
+    xl.append(((Rot@shape)+dt*i*v[:,np.newaxis])[0])           #rotates the orginal shape according to the rot matrix and saves each different rotation
+    yl.append(((Rot@shape)+dt*i*v[:,np.newaxis])[1])
 
    
 # print(xl)
