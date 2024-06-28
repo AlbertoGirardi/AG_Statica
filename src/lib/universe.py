@@ -2,8 +2,8 @@
 
 class Universe:
 
-    def __init__(self):
-        pass
+    def __init__(self, bodylist):
+        self.bodylist = bodylist
 
 
     def run(self):
