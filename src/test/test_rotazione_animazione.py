@@ -43,7 +43,7 @@ xb = []
 yb = []
 
 
-w = -2*np.pi/T               #angular velocity, caluculated from the period
+w = +2*np.pi/T               #angular velocity, caluculated from the period
 print(w)
 
 v = np.array([0.2,0.1])   #velocity, xy vector

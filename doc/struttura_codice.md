@@ -5,3 +5,16 @@
 ### LIBRERIE ESTERNE
 
 Numpy
+matplotlib
+
+
+
+
+
+
+## GUI
+
+GUI with matplotlib
+animation with matplotlib animate
+
+physics solver -> list of positions and rotation angles -> list of shape matrixes (rotated and shifted) -> used to plot the moving shapes
