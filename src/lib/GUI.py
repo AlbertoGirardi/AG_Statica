@@ -22,7 +22,7 @@ def draw_polygon(plot, shape, rotation_angle, position):
     shape = shape + position[:,np.newaxis]          #shifting the shape matrix with the position vector
 
 
-    ax.plot(0,0, marker = 'o',mfc = 'g')   #marking the origin with a green dot
+    ax.plot(0,0, 'og')   #marking the origin with a green dot
     ax.plot(shape[0,:],shape[1,:],'o-b')
 
     ax.axis([-scale, scale, -scale, scale])
