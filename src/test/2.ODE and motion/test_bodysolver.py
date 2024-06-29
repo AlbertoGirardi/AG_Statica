@@ -24,12 +24,15 @@ def plot_pos_vel_xy(sol_d, tsol, sol_a):
     ax['x'].legend( bbox_to_anchor=(-0.1, 1))
     ax['x'].set_xlabel("t [s]")
     ax['x'].set_ylabel("x [m]")
+    ax['x'].set_title("position x")
         
     #y position
     ax['y'].plot(sol_d.t, sol_d.y[1,:],'+r',label = 'RK45')
     ax['y'].plot(tsol, sol_a[1,:],'-b',label = 'exact')
     ax['y'].set_xlabel("t [s]")
     ax['y'].set_ylabel("y [m]")
+    ax['y'].set_title("position y")
+
 
     #x velocity
 
@@ -52,13 +55,13 @@ def plot_pos_vel_xy(sol_d, tsol, sol_a):
     #plotting the movement on the xy plane
     ax['xy'].grid(True)
     ax['xy'].set_aspect('equal', adjustable='box')
-    ax['xy'].plot(sol_d.y[0,0],  sol_d.y[1,0] , 'og', label = "start")  
+    ax['xy'].plot(sol_d.y[0,0],  sol_d.y[1,0] , 'oy', label = "start")  
     ax['xy'].plot(sol_d.y[0,:], sol_d.y[1,:] , '+g', label = 'traiettoria RK')
     ax['xy'].plot(0,0,  'or')  #marking origin
 
-    ax['xy'].plot(sol_a[0,:], sol_a[1,:] , label = 'traiettoria a')
+    ax['xy'].plot(sol_a[0,:], sol_a[1,:] , 'c',label = 'traiettoria a')
 
-    ax['xy'].legend(bbox_to_anchor=(0.5, 1.35))
+    ax['xy'].legend(bbox_to_anchor=(0.5, 1.4))
     ax['xy'].set_title("POSITION in XY PLANE")
 
     fig.tight_layout()
@@ -140,5 +143,29 @@ class mass_2spring(Dynamic_system):
 
         """acceleration of the system in Y direction, t:time,  u: state vector"""
         return spring_acceleration(self.omegay, y)
+
+    
+
+class mass_falling(Dynamic_system):
+
+    """CLASSE PER CORPO IN CADUTA LIBERA
+
+    g = valore accelerazione di gravità, + -> verso l'alto
+    """
+    def __init__(self,  g):
+        self.g = g
+
+    def accelerationX(self, t, u):
+
+        """acceleration of the system in X direction, t:time,  u: state vector"""
+
+        return 0
+
+
+    def accelerationY(self, t, u):
+
+
+        """acceleration of the system in Y direction, t:time,  u: state vector"""
+        return self.g
 
     
