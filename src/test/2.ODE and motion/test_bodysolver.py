@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def plot_pos_vel_xy(sol_d, tsol, sol_a):
+def plot_pos_vel_xy(sol_d, tsol, sol_a, TITLE):
 
     """PLOTS X, Y POSITION, X,Y VELOCITY against time
     and position in XY plane
@@ -14,7 +14,7 @@ def plot_pos_vel_xy(sol_d, tsol, sol_a):
     tsol: array of time istants for which solution has been calculated
     """
     fig,ax = plt.subplot_mosaic([['x', 'y', 'xy'], ['vx', 'vy', 'xy']])    
-    fig.suptitle('2 MOLLE SU CARRELLI con RK45')
+    fig.suptitle(TITLE)
     fig.set_size_inches(12,6)
 
     #x position
@@ -61,7 +61,7 @@ def plot_pos_vel_xy(sol_d, tsol, sol_a):
 
     ax['xy'].plot(sol_a[0,:], sol_a[1,:] , 'c',label = 'traiettoria a')
 
-    ax['xy'].legend(bbox_to_anchor=(0.5, 1.4))
+    ax['xy'].legend(bbox_to_anchor=(0.5, -0.5))
     ax['xy'].set_title("POSITION in XY PLANE")
 
     fig.tight_layout()
@@ -167,5 +167,33 @@ class mass_falling(Dynamic_system):
 
         """acceleration of the system in Y direction, t:time,  u: state vector"""
         return self.g
+
+    
+
+class mass_2constant_forces(Dynamic_system):
+
+    """CLASS FOR BODY WITH CONSTANT FORCES ON X AND Y DIRECTIONS
+        mass: mass of the body
+        Fx: force on the x direction
+        Fy: force on the y direction
+    """
+
+    def __init__(self, mass, Fx, Fy):
+        self.mass = mass
+        self.Fx = Fx
+        self.Fy = Fy
+
+    def accelerationX(self, t, u):
+
+        """acceleration of the system in X direction, t:time,  u: state vector"""
+
+        return self.Fx/self.mass
+
+
+    def accelerationY(self, t, u):
+
+
+        """acceleration of the system in Y direction, t:time,  u: state vector"""
+        return self.Fy/self.mass
 
     

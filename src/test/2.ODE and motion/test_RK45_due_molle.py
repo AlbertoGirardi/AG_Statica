@@ -58,6 +58,6 @@ RMSerr = RMSE(sol.y[0,:] ,xsol)
 print("err  ={0:14.3f}, err/dt  ={1:14.3f}".format(err,err/dt))
 print("RMSE ={0:14.3f}, RMSE/dt ={1:14.3f}".format(RMSerr,RMSerr/dt))
 
-plot_pos_vel_xy(sol, tsol, sol_exact)
+plot_pos_vel_xy(sol, tsol, sol_exact, TITLE="DUE MOLLE SU CARRELLI")
 
 
