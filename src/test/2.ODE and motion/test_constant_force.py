@@ -17,7 +17,7 @@ vy0 = 0
 m = 10
 
 FX = 5
-FY = 3
+FY = 0
 
 
 T    = 3 #tempo totale simulazione

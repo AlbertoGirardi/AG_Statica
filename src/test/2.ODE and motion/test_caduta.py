@@ -8,7 +8,7 @@ x0 = 0
 y0 = 5
 
 #velocita iniziali nei due assi
-vx0 = 8
+vx0 = 0
 vy0 = 10
 
 g = -9.81 #m/s^2   gravitational acceleration
