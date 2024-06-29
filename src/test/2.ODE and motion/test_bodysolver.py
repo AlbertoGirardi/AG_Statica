@@ -64,3 +64,81 @@ def plot_pos_vel_xy(sol_d, tsol, sol_a):
     fig.tight_layout()
     plt.show()
 
+
+
+
+def elinfty(x,xsol):
+    return np.max(np.abs(x - xsol))
+def RMSE(x,xsol):
+    N = np.size(x)
+    return np.sqrt(1/N*np.sum((x - xsol)**2))   
+
+
+
+
+
+def spring_acceleration(omega, deltax):
+
+    """returns the acceleration of a system of a mass tied to a spring,  omega: constant omega,  deltax: displacement of the spring"""
+
+    return - (omega**2 * deltax)
+
+
+
+
+
+class Dynamic_system():
+
+    """CLASSE PER UN SISTEMA DINAMICO DI 1 CORPO
+     rappresentato da un punto materiale sul piano XY, dal vettore di stato. Questa classe non si utilizza direttamente, ma si eredita da questa
+    non overload __call__
+     NECESSARY TO DEFINE  self.accelerationX(t, u) and self.accelerationY(t, u) in child class """
+
+    def __init__(self):
+        pass
+
+
+    def __call__(self, t, u):
+
+        
+        """dato il vettore di stato u [x,y,vx,vy] e il tempo restituisce il vettore FLUSSO[vx, vy, ax, ay], calcolando l'accelerazione subita
+
+        """
+
+        x, y, vx, vy = u                        #spacchettamento vettore di stato
+        dx = vx                                 #dummy 
+        dy = vy
+        dvx = self.accelerationX(t, u)          #ottiene accelerazione del corpo nelle due direzioni
+        dvy = self.accelerationY(t, u)
+        return [dx, dy, dvx, dvy]               #ritorna il vettore FLUSSO
+
+    
+
+
+
+class mass_2spring(Dynamic_system):
+
+    """CLASSE PER CORPO VINCOLATO DA DUE MOLLE SU CARRELLI
+
+    omegax: valore costante omega per molla asse x;
+    omegay: valore costante omega per molla asse y
+    """
+    def __init__(self,  omegax, omegay):
+        self.omegax = omegax
+        self.omegay = omegay
+
+    def accelerationX(self, t, u):
+
+        """acceleration of the system in X direction, t:time,  u: state vector"""
+        x, y, vx, vy = u
+
+        return spring_acceleration(self.omegax, x)
+
+
+    def accelerationY(self, t, u):
+        x, y, vx, vy = u
+
+        """acceleration of the system in Y direction, t:time,  u: state vector"""
+        return spring_acceleration(self.omegay, y)
+
+    
