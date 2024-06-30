@@ -1,29 +1,24 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from   scipy.integrate import solve_ivp
-from test_bodysolver import plot_pos_vel_xy, RMSE, elinfty, mass_falling
-
-
-
-def calculate_energy(u):
-
-    """ calculates the kinetic+potential energy of a body, given state vector u"""
-
-    return 0.5*(u[2,:]**2+u[3,:]**2) - g*u[1,:]
+from test_bodysolver import plot_pos_vel_xy, RMSE, elinfty, mass_var_force
 
 #posizioni iniziali nei due assi
 x0 = 0
-y0 = 5
+y0 = 0
 
 #velocita iniziali nei due assi
-vx0 =8
-vy0 = 10
-
-g = -9.81 #m/s^2   gravitational acceleration
+vx0 =0
+vy0 = 0
 
 
-T    = 3 #tempo totale simulazione
-N_per = 10 # numero di intervalli di tempo in un perido
+f = 2
+m = 2
+
+w = 2
+
+T    = 5 #tempo totale simulazione
+N_per = 20 # numero di intervalli di tempo in un perido
 N    = N_per # numero di intervalli di tempo 
 dt   = T/N # intervallo di tempo
 
@@ -33,14 +28,16 @@ dt   = T/N # intervallo di tempo
 
 tsol  = np.linspace(0,T,N+1)                                    #istanti per i quali si calcola la soluzione 
 
+fm_ratio = f/m
+print(fm_ratio)
 
-#MRUA per calcolare la soluzione esatta
-xsol = x0 + vx0*tsol
-ysol = y0 + vy0*tsol + 0.5*g*tsol**2
+xsol = x0 - ((w**2)*fm_ratio*np.cos(w*tsol))
+ysol = y0 + vy0*tsol 
 
-vxsol = np.full(tsol.shape, vx0)
+vxsol = vy0 + (w)*fm_ratio*np.sin(w*tsol)
 print(vxsol)
-vysol = vy0 + g*tsol
+
+vysol = vy0 *tsol
 
 
 sol_exact = np.vstack((xsol, ysol, vxsol, vysol))                       #unione delle soluzioni calcolate in una matrice formata da una serie di vettori di stato
@@ -53,7 +50,7 @@ u0 = np.array([x0,y0, vx0, vy0])    # vettore di stato inizializzato a t=0
 
 
 # metodo Runge Kutta predictor corrector 4/5 ordine
-sol = solve_ivp(mass_falling(g= g), [0, T], u0 , method='RK45', t_eval=tsol)
+sol = solve_ivp(mass_var_force(f, omega=w, mass=m), [0, T], u0 , method='RK45', t_eval=tsol)
 
 
 #calcolo e stampa errori rispetto alla soluzione analitica
@@ -62,14 +59,4 @@ RMSerr = RMSE(sol.y[0,:] ,xsol)
 print("err  ={0:14.3f}, err/dt  ={1:14.3f}".format(err,err/dt))
 print("RMSE ={0:14.3f}, RMSE/dt ={1:14.3f}".format(RMSerr,RMSerr/dt))
 
-
-energy = calculate_energy(sol.y)
-# print(energy)
-
-print(f"avarage total energy:{np.average(energy):.4f} standard deviation of the value of total energy {np.std(energy):.4f}")
-
-
-plot_pos_vel_xy(sol, tsol, sol_exact, TITLE="CORPO IN CADUTA LIBERA")
-
-
-
+plot_pos_vel_xy(sol, tsol, sol_exact, TITLE="CORPO soggetto a FORZA VARIABILE")

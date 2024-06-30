@@ -39,7 +39,7 @@ def plot_pos_vel_xy(sol_d, tsol, sol_a, TITLE):
     ax['vx'].plot(sol_d.t, sol_d.y[2,:],'+r',label = 'RK45')
     ax['vx'].plot(tsol, sol_a[2,:],'-b',label = 'exact')
     ax['vx'].set_xlabel("t [s]")
-    ax['vx'].set_ylabel("vx [m]")
+    ax['vx'].set_ylabel("vx [m/s]")
     ax['vx'].set_title("velocity x")
 
 
@@ -47,7 +47,7 @@ def plot_pos_vel_xy(sol_d, tsol, sol_a, TITLE):
     ax['vy'].plot(sol_d.t, sol_d.y[3,:],'+r',label = 'RK45')
     ax['vy'].plot(tsol, sol_a[3,:],'-b',label = 'exact')
     ax['vy'].set_xlabel("t [s]")
-    ax['vy'].set_ylabel("vy [m]")
+    ax['vy'].set_ylabel("vy [m/s]")
     ax['vy'].set_title("velocity y")
 
 
@@ -56,10 +56,11 @@ def plot_pos_vel_xy(sol_d, tsol, sol_a, TITLE):
     ax['xy'].grid(True)
     ax['xy'].set_aspect('equal', adjustable='box')
     ax['xy'].plot(sol_d.y[0,0],  sol_d.y[1,0] , 'oy', label = "start")  
-    ax['xy'].plot(sol_d.y[0,:], sol_d.y[1,:] , '+g', label = 'traiettoria RK')
+    ax['xy'].plot(sol_d.y[0,:], sol_d.y[1,:] , '+g', label = 'RK')
     ax['xy'].plot(0,0,  'or')  #marking origin
-
-    ax['xy'].plot(sol_a[0,:], sol_a[1,:] , 'c',label = 'traiettoria a')
+    ax['xy'].set_xlabel("x[m]")
+    ax['xy'].set_ylabel("y[m]")
+    ax['xy'].plot(sol_a[0,:], sol_a[1,:] , 'c',label = 'exact')
 
     ax['xy'].legend(bbox_to_anchor=(0.5, -0.5))
     ax['xy'].set_title("POSITION in XY PLANE")
@@ -204,5 +205,38 @@ class mass_2constant_forces(Dynamic_system):
 
         """acceleration of the system in Y direction, t:time,  u: state vector"""
         return self.Fy/self.mass
+
+    
+
+
+
+class mass_var_force(Dynamic_system):
+
+    """CLASSE PER CORPO SOGGETTO A FORZA VARIABILE CON LEGGE SINUSOIDALE in una direzione
+    f= forza modulo max
+    omega= pulsazione
+
+    
+    """
+    def __init__(self,  f, omega, mass):
+        self.f = f
+        self.omega = omega
+        self.mass = mass
+
+    def accelerationX(self, t, u):
+
+        """acceleration of the system in X direction, t:time,  u: state vector
+        variable force, proportional to cos of time"""
+
+        return (self.f * np.cos(self.omega*t))/self.mass
+
+
+    def accelerationY(self, t, u):
+
+
+        """acceleration of the system in Y direction, t:time,  u: state vector"""
+        return 0
+
+
 
     
