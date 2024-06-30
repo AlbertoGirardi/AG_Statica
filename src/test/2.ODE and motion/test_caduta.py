@@ -23,7 +23,7 @@ g = -9.81 #m/s^2   gravitational acceleration
 
 
 T    = 3 #tempo totale simulazione
-N_per = 10 # numero di intervalli di tempo in un perido
+N_per = 100 # numero di intervalli di tempo in un perido
 N    = N_per # numero di intervalli di tempo 
 dt   = T/N # intervallo di tempo
 
@@ -39,7 +39,6 @@ xsol = x0 + vx0*tsol
 ysol = y0 + vy0*tsol + 0.5*g*tsol**2
 
 vxsol = np.full(tsol.shape, vx0)
-print(vxsol)
 vysol = vy0 + g*tsol
 
 
@@ -51,9 +50,9 @@ sol_exact = np.vstack((xsol, ysol, vxsol, vysol))                       #unione 
 #VETTORE DI STATO   [x,y,vx,vy]
 u0 = np.array([x0,y0, vx0, vy0])    # vettore di stato inizializzato a t=0
 
-
+system = mass_falling(g= g)     #sistema
 # metodo Runge Kutta predictor corrector 4/5 ordine
-sol = solve_ivp(mass_falling(g= g), [0, T], u0 , method='RK45', t_eval=tsol)
+sol = solve_ivp(system, [0, T], u0 , method='RK45', t_eval=tsol)
 
 
 #calcolo e stampa errori rispetto alla soluzione analitica
@@ -63,10 +62,10 @@ print("err  ={0:14.3f}, err/dt  ={1:14.3f}".format(err,err/dt))
 print("RMSE ={0:14.3f}, RMSE/dt ={1:14.3f}".format(RMSerr,RMSerr/dt))
 
 
-energy = calculate_energy(sol.y)
+energy = system.energy(sol.y)
 # print(energy)
 
-print(f"avarage total energy:{np.average(energy):.4f} standard deviation of the value of total energy {np.std(energy):.4f}")
+print(f"avarage total energy:{np.average(energy):.4f}J standard deviation of the value of total energy {np.std(energy):.4f}")
 
 
 plot_pos_vel_xy(sol, tsol, sol_exact, TITLE="CORPO IN CADUTA LIBERA")

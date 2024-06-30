@@ -139,6 +139,11 @@ class mass_2spring(Dynamic_system):
     def __init__(self,  omegax, omegay):
         self.omegax = omegax
         self.omegay = omegay
+        self.mass = 1                   #per semplicità assumiamo massa = 1 kg per calcolare le k necessarie per l'energia, ma il moto sarà uguale
+        self.kx = (self.omegax**2)*self.mass
+        self.ky = (self.omegay**2)*self.mass
+
+        print	('massa ',self.mass)
 
     def accelerationX(self, t, u):
 
@@ -153,6 +158,11 @@ class mass_2spring(Dynamic_system):
 
         """acceleration of the system in Y direction, t:time,  u: state vector"""
         return spring_acceleration(self.omegay, y)
+    
+
+    def energy(self, u):
+        """ calculates the kinetic+elastic energy of a body, given state vector u"""
+        return (self.mass*0.5*(u[2,:]**2+u[3,:]**2)+ 0.5*( self.kx*u[0,:]**2+ self.ky*u[1,:]**2))
 
     
 
@@ -177,6 +187,12 @@ class mass_falling(Dynamic_system):
 
         """acceleration of the system in Y direction, t:time,  u: state vector"""
         return self.g
+    
+    def energy(self, u):
+
+        """ calculates the kinetic+potential energy of a body, given state vector u"""
+
+        return 0.5*(u[2,:]**2+u[3,:]**2) - self.g*u[1,:]
 
     
 
