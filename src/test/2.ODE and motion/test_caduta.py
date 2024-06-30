@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from   scipy.integrate import solve_ivp
 from test_bodysolver import plot_pos_vel_xy, RMSE, elinfty, mass_falling
 
-
+import math
 
 def calculate_energy(u):
 
@@ -64,8 +64,8 @@ print("RMSE ={0:14.3f}, RMSE/dt ={1:14.3f}".format(RMSerr,RMSerr/dt))
 
 energy = system.energy(sol.y)
 # print(energy)
-
-print(f"avarage total energy:{np.average(energy):.4f}J standard deviation of the value of total energy {np.std(energy):.4f}")
+stdev = np.std(energy)
+print(f"avarage total energy:{np.average(energy):.4f}J standard deviation of the value of total energy :{stdev:.4f} (~10^{math.floor(math.log10(stdev))})")
 
 
 plot_pos_vel_xy(sol, tsol, sol_exact, TITLE="CORPO IN CADUTA LIBERA")

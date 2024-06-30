@@ -66,7 +66,7 @@ def plot_pos_vel_xy(sol_d, tsol, sol_a, TITLE):
     ax['xy'].set_title("POSITION in XY PLANE")
 
     
-    print(max(sol_d.y[0,:]), max(sol_d.y[1,:]))
+    # print(max(sol_d.y[0,:]), max(sol_d.y[1,:]))
 
     if max(sol_d.y[0,:])< 0.1:
         ax['xy'].set_xlim(-1,1)
