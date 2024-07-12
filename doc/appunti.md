@@ -72,3 +72,60 @@ es. 2 evitare di avere velcità iniziale =/= 0
 calcolare l'energia totale e registrarla e vedere se è costante oppure no
 
 (metodi simplettici che conservano energia oppure altre quantità conservate)
+
+
+# MULTI BODY
+
+
+vettore per le velocità = vettore forze applicate * matrice inerzia
+
+
+da sistema di rif mobile a fisso,
+punto sigma a è fisso, cambia solo la matrice di rotazione
+
+calcolo velocità del punto
+derivata matrice di rotazione per sapere velocità = matrice (t+pi/2)
+
+
+
+accelerazione per baricentro
+
+discorso simile per accelerazioen ma l'accelerzione totale è quella tangenziale + la centripeta (che la mantinee nel moto di rotazione)
+
+
+vincoli: forze che esprimono sono tali da mantere una certa condizione cinematica
+
+forza di una molla e dello smorzatore 
+
+
+
+nel multibody ci sono anche forze non attive
+ci sono anche forze non attive
+
+mega matrice con le masse e momenti di inerzia
+
+
+vincolo cerniera  
+hr -> vettore delle forze reattive, per cerniera f in x, y e momento    
+
+vettore di reazioni dei due corpi, matrice che rappresenta il vincolo per vettore delle direzioni del vincolo
+
+vincolo cinematico -> funzione delle q -> sistema di equzioni da rispettare -> equazione vettoriale 
+condizioni su accelerazioni e 
+
+
+vincolo cerniera: i punti della cerniera devono essere coincidenti, e le loro velocità  uguali
+
+matrice jacobiana legata all 'alra trasposta
+
+da dimostrare che velocità del vettore normale è 
+
+
+
+RISULTATO: DUE EQUAZIONI DIFFERENZIALI:
+
+equazione sulla cinematica del corpo (come prima)
+
+equazione del vincolo
+
+-> q due punti accelerazioni totali -> trasformarlo nel vettore flusso

@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def plot_pos_vel_xy(sol_d, tsol, sol_a, TITLE):
+def plot_pos_vel_xy(sol_d, tsol, sol_a, TITLE, animate = False):
 
     """PLOTS X, Y POSITION, X,Y VELOCITY against time
     and position in XY plane
@@ -12,6 +12,7 @@ def plot_pos_vel_xy(sol_d, tsol, sol_a, TITLE):
     sol_d: scipy solver solution, in the form of state vector  [x,y,vx,vy]
     sol_a: solution to compare to, in the form of state vector
     tsol: array of time istants for which solution has been calculated
+    animate: do a matplotlib animation of the xy graph
     """
     fig,ax = plt.subplot_mosaic([['x', 'y', 'xy'], ['vx', 'vy', 'xy']])    
     fig.suptitle(TITLE)
@@ -52,27 +53,28 @@ def plot_pos_vel_xy(sol_d, tsol, sol_a, TITLE):
 
 
 
-    #plotting the movement on the xy plane
-    ax['xy'].grid(True)
-    ax['xy'].set_aspect('equal', adjustable='box')
-    ax['xy'].plot(sol_d.y[0,0],  sol_d.y[1,0] , 'oy', label = "start")  
-    ax['xy'].plot(sol_d.y[0,:], sol_d.y[1,:] , '+g', label = 'RK')
-    ax['xy'].plot(0,0,  'or')  #marking origin
-    ax['xy'].set_xlabel("x[m]")
-    ax['xy'].set_ylabel("y[m]")
-    ax['xy'].plot(sol_a[0,:], sol_a[1,:] , 'c',label = 'exact')
+    if not animate:
+        #plotting the movement on the xy plane
+        ax['xy'].grid(True)
+        ax['xy'].set_aspect('equal', adjustable='box')
+        ax['xy'].plot(sol_d.y[0,0],  sol_d.y[1,0] , 'oy', label = "start")  
+        ax['xy'].plot(sol_d.y[0,:], sol_d.y[1,:] , '+g', label = 'RK')
+        ax['xy'].plot(0,0,  'or')  #marking origin
+        ax['xy'].set_xlabel("x[m]")
+        ax['xy'].set_ylabel("y[m]")
+        ax['xy'].plot(sol_a[0,:], sol_a[1,:] , 'c',label = 'exact')
 
-    ax['xy'].legend(bbox_to_anchor=(0.5, -0.5))
-    ax['xy'].set_title("POSITION in XY PLANE")
+        ax['xy'].legend(bbox_to_anchor=(0.5, -0.5))
+        ax['xy'].set_title("POSITION in XY PLANE")
 
-    
-    # print(max(sol_d.y[0,:]), max(sol_d.y[1,:]))
+        
+        # print(max(sol_d.y[0,:]), max(sol_d.y[1,:]))
 
-    if max(sol_d.y[0,:])< 0.1:
-        ax['xy'].set_xlim(-1,1)
+        if max(sol_d.y[0,:])< 0.1:
+            ax['xy'].set_xlim(-1,1)
 
-    if abs(max(sol_d.y[1,:]))< 0.1:
-        ax['xy'].set_ylim(-1,1)
+        if abs(max(sol_d.y[1,:]))< 0.1:
+            ax['xy'].set_ylim(-1,1)
 
     fig.tight_layout()
     plt.show()

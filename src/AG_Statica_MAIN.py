@@ -27,7 +27,7 @@ def MAIN():
     
     triangle.run_Physics()
 
-    triangle.draw(plt.subplots())
+    
 
 
 
