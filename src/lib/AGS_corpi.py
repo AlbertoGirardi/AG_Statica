@@ -6,16 +6,33 @@ from .auxiliary import *
 
 #classe base per un corpo
 
+
 class Corpo():
     
     def __init__(self, mass, position, velocity):
 
         """mass: float [kg] 
-           position and velocity: numpy arrays, 3 dimensions
+           position and velocity: numpy arrays, 2 dimensions
         """
+
         self.mass = mass
         self.position = position
         self.velocity = velocity
+        self.u0 = np.concatenate((self.position, self.velocity))
+        self.forces = []
+
+        self.g = 0   #gravitational acceleration
+
+    
+    def addForce(self, force_list):
+        self.forces.append(force_list)
+
+
+    def accelerationX(self, t, u):
+        return 0
+    
+    def accelerationY(self, t, u):
+        return self.g
 
 
 
@@ -29,6 +46,7 @@ class Point_mass(Corpo):
         pass
 
 
+
 class Rigido(Corpo):
     def __init__(self, mass, position, rotation_angle , velocity, angular_velocity, shape ,inertia):
 
@@ -40,19 +58,3 @@ class Rigido(Corpo):
         self.rotation_angle = rotation_angle
         self.angular_velocity = angular_velocity
 
-
-    def draw(self, plot):
-        GUI.draw_polygon(plot, self.shape, self.rotation_angle, self.position )
-
-
-    def run_Physics(self):
-        
-        step = 0.05
-        stop = 5
-        start = 0
-        t = list([start + i * step for i in range(int((stop - start) / step) + 1)])
-        
-        angles = list(map(lambda t: self.angular_velocity*t, t))
-
-        print(angles)
-        return(angles)
