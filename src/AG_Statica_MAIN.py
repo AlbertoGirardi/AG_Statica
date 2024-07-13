@@ -28,7 +28,7 @@ def MAIN():
     forma = np.array([[1,0,-1,1], [0,1,0,0]])   + np.array([0,-1/3])[:,np.newaxis]      #forma spostata rispetto al baricentro
 
 
-    mass = lib.AGS_corpi.Rigido(3, position=posizione, velocity=velocity, shape=forma)
+    mass = lib.AGS_corpi.Rigido(3,1, position=posizione, velocity=velocity, shape=forma)
 
     print(mass.u0)
 
