@@ -25,9 +25,11 @@ class Rigido():
 
 
         self.mass = mass
+        self.inertia = inertia
         self.position = position
         self.velocity = velocity
-        self.u0 = np.concatenate((self.position, self.velocity))
+        self.u0 = np.concatenate((self.position,[self.rotation_angle], self.velocity, [self.angular_velocity]))
+        # print(self.u0)
         self.forces = []
 
         self.universe = None    #univers of which the body is part, used for comunicating general parameters 
@@ -38,7 +40,7 @@ class Rigido():
 
 
     def addForce(self, force_list):
-        self.forces.append(force_list)
+        self.forces.extend(force_list)
 
 
 
@@ -46,11 +48,20 @@ class Rigido():
 
     def Force(self, t, u):
 
-        """returns an array of the total forces and momentums applied to the body
+        """returns an array of the total forces and torques applied to the body
         [Fx, Fy, M]
         """
 
-        return np.array([0, self.universe.g*self.mass,0])
+        resultingForce = np.zeros(3)
+
+        for force in self.forces:
+
+            resultingForce += force(self, t, u)
+            
+
+        return resultingForce
+
+
 
 
 

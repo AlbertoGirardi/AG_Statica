@@ -20,10 +20,17 @@ class Universe:
         self.T = 0     #placeholder for total time
         self.dt = 0   #placeholder for simulation time
 
-        self.g = gravity_a
+        self.g = gravity_a     #diagonal values of the mass-inertia matrix for the universe
+
+        M_m_diag = []
 
         for b in self.bodylist:             #tells every body the universe gravity
             b.universe = self
+            M_m_diag.extend([b.mass, b.mass, b.inertia])
+
+
+        self.Mass_matrix = np.diag(M_m_diag)
+        print(self.Mass_matrix)
 
         if self.n_bodies != 1:
             raise RuntimeError("only one body system")
@@ -48,23 +55,25 @@ class Universe:
     def __call__(self, t, u):
         
         
-        """dato il vettore di stato u [x,y,vx,vy] e il tempo restituisce il vettore FLUSSO[vx, vy, ax, ay], calcolando l'accelerazione subita
+        """dato il vettore di stato u [x,y,phi,vx,vy, omega] e il tempo restituisce il vettore FLUSSO[vx, vy, omega, ax, ay, epsilon], calcolando l'accelerazione subita
             
         necessary for solving the system with the scipy api
 
         """
 
-        x, y, vx, vy = u                        #spacchettamento vettore di stato
+        x, y, a , vx, vy, w = u                        #spacchettamento vettore di stato
 
 
         dx = vx                                 #dummy 
         dy = vy
+        dphi = w
 
-        accelerations = self.bodylist[0].Force(t, u) / self.bodylist[0].mass
+        accelerations = self.bodylist[0].Force(t, u) / np.diag(self.Mass_matrix)
 
         dvx = accelerations[0]         #ottiene accelerazione del corpo nelle due direzioni
         dvy = accelerations[1]
-        return [dx, dy, dvx, dvy]               #ritorna il vettore FLUSSO
+        dw = accelerations[2]
+        return [dx, dy, dphi, dvx, dvy, dw]               #ritorna il vettore FLUSSO
 
 
         
