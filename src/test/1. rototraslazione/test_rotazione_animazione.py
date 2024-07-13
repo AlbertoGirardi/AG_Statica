@@ -84,5 +84,6 @@ def update(frame):
 print(dt,int(T/dt))
 print(xb, yb)
 
+
 ani = animation.FuncAnimation(fig=fig, func=update, frames=int(T/dt), interval=dt*1000)             #creates the animation
 plt.show()

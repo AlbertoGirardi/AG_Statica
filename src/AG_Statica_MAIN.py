@@ -52,7 +52,7 @@ def MAIN():
     universo.sol_a = sol_exact
 
     
-    universo.draw()
+    universo.draw(do_animation=True)
 
 
 

@@ -67,6 +67,7 @@ energy = system.energy(sol.y)
 stdev = np.std(energy)
 print(f"avarage total energy:{np.average(energy):.4f}J standard deviation of the value of total energy :{stdev:.4f} (~10^{math.floor(math.log10(stdev))})")
 
+print(sol.y[:2,0])
 
 plot_pos_vel_xy(sol, tsol, sol_exact, TITLE="CORPO IN CADUTA LIBERA")
 

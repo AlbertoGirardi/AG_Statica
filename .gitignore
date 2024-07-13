@@ -2,4 +2,4 @@ src/lib/__pycache__/
 test.py  
 
 **/__pycache__/
-
+.vscode

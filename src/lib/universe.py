@@ -13,6 +13,10 @@ class Universe:
     def __init__(self, bodylist, gravity_a = 0):
         self.bodylist = bodylist
         self.n_bodies = len(self.bodylist)              #numero di corpi
+        self.sol_a = None                               #exact solution of the system
+
+        self.T = 0     #placeholder for total time
+        self.dt = 0   #placeholder for simulation time
 
         for b in self.bodylist:
             b.g = gravity_a
@@ -23,10 +27,12 @@ class Universe:
 
     def solve(self, T, dt):
 
-        N = int(T/dt)
-        self.tsol  = np.linspace(0,T,N+1)                                    #istanti per i quali si calcola la soluzione 
+        self.N = int(T/dt)
+        self.tsol  = np.linspace(0,T,self.N+1)                                    #istanti per i quali si calcola la soluzione 
+        self.dt = dt
+        self.T = T
 
-        self.dynamic_solution = solve_ivp(self, [0, T], self.bodylist[0].u0 , method='RK45', t_eval=self.tsol)
+        self.dynamic_solution = solve_ivp(self, [0, self.T], self.bodylist[0].u0 , method='RK45', t_eval=self.tsol)
 
 
 
@@ -50,5 +56,5 @@ class Universe:
 
 
 
-    def draw(self):
-        lib.GUI.plot_pos_vel_xy(self.dynamic_solution, self.tsol, self.sol_a, "test")
+    def draw(self, do_animation=False, time_ratio = 1):
+        lib.GUI.plot_pos_vel_xy(self.dynamic_solution, self.tsol,  "test", sol_a=self.sol_a, animate=do_animation, T=self.T, dt= self.dt)
