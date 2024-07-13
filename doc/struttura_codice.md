@@ -23,9 +23,13 @@ physics solver -> list of positions and rotation angles -> list of shape matrixe
 
 ## physics solving
 
-each body --> __call__ function that returns the force in that moment on the body
+univers --> __call__ function that returns the force in that moment on the body
 physics solver implemented in the universe, runs over all bodies and generates a list of state vectors
 state vectors passed to gui for plotting.
 
 
-STATE VECTOR  [x,y,vx,vy]
+STATE VECTOR  [x,y,vx,vy]  for mass points
+
+STATE VECTOR  [x,y,phi, vx,vy, omega]  for rigid bodies
+
+
