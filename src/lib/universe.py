@@ -20,8 +20,10 @@ class Universe:
         self.T = 0     #placeholder for total time
         self.dt = 0   #placeholder for simulation time
 
+        self.g = gravity_a
+
         for b in self.bodylist:             #tells every body the universe gravity
-            b.g = gravity_a
+            b.universe = self
 
         if self.n_bodies != 1:
             raise RuntimeError("only one body system")
@@ -53,10 +55,15 @@ class Universe:
         """
 
         x, y, vx, vy = u                        #spacchettamento vettore di stato
+
+
         dx = vx                                 #dummy 
         dy = vy
-        dvx = self.bodylist[0].accelerationX(t, u)          #ottiene accelerazione del corpo nelle due direzioni
-        dvy = self.bodylist[0].accelerationY(t, u)
+
+        accelerations = self.bodylist[0].Force(t, u) / self.bodylist[0].mass
+
+        dvx = accelerations[0]         #ottiene accelerazione del corpo nelle due direzioni
+        dvy = accelerations[1]
         return [dx, dy, dvx, dvy]               #ritorna il vettore FLUSSO
 
 
@@ -74,4 +81,4 @@ class Universe:
             the time ratio sets the ratio between simulation time and real time
             """
         lib.GUI.plot_pos_vel_xy(self.dynamic_solution, self.tsol,  "test", shape=self.bodylist[0].shape,
-                                 sol_a=self.sol_a, animate=do_animation, T=self.T*time_ratio, dt= self.dt*time_ratio)
+                                 sol_a=self.sol_a, animate=do_animation, T=self.T, dt= self.dt, time_ratio=time_ratio)

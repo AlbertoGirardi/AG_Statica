@@ -36,7 +36,7 @@ def draw_polygon(plot, shape, rotation_angle, position):
 
 
 
-def plot_pos_vel_xy(sol_d, tsol,  TITLE, shape=np.array([0,0]), animate = False, sol_a=None, T=5, dt=1/10):
+def plot_pos_vel_xy(sol_d, tsol,  TITLE, shape=np.array([0,0]), animate = False, sol_a=None, T=5, dt=1/10, time_ratio = 1 ):
 
     """PLOTS X, Y POSITION, X,Y VELOCITY against time
     and position in XY plane
@@ -133,7 +133,7 @@ def plot_pos_vel_xy(sol_d, tsol,  TITLE, shape=np.array([0,0]), animate = False,
         polygon = ax['xy'].plot(shape[0], shape[1], 'o-b', label= 'T=0')[0]
         L = ax['xy'].legend()
 
-    ani = animation.FuncAnimation(fig=fig, func=update_animation_graph, frames=int(T/dt), interval=dt*1000) 
+    ani = animation.FuncAnimation(fig=fig, func=update_animation_graph, frames=int(T/dt), interval=dt*1000*time_ratio) 
 
     fig.tight_layout()
     plt.show()

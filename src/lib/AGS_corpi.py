@@ -16,7 +16,7 @@ class Rigido():
         CLASS FOR A GENERAL BODY IN 2 DIMENSIONS,
 
         handles all the mathematics 
-        
+
         for polygon shape body
         shape: nx2 matrix, containing all the vertexes, x coord in first row, y coord second row"""
         self.shape = shape
@@ -30,20 +30,27 @@ class Rigido():
         self.u0 = np.concatenate((self.position, self.velocity))
         self.forces = []
 
+        self.universe = None    #univers of which the body is part, used for comunicating general parameters 
+
        
 
-        self.g = 0   #gravitational acceleration
+
 
 
     def addForce(self, force_list):
         self.forces.append(force_list)
 
 
-    def accelerationX(self, t, u):
-        return 0
+
     
-    def accelerationY(self, t, u):
-        return self.g
+
+    def Force(self, t, u):
+
+        """returns an array of the total forces and momentums applied to the body
+        [Fx, Fy, M]
+        """
+
+        return np.array([0, self.universe.g*self.mass,0])
 
 
 
