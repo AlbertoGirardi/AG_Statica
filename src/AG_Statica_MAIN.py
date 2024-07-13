@@ -6,6 +6,7 @@
 import lib.AGS_corpi
 import numpy as np
 import matplotlib.pyplot as plt
+import lib.universe 
 
 
 
@@ -13,25 +14,47 @@ def MAIN():
     #funzione main con il corpo del programma
 
     print("AG Statica")
-    print("es 1 test")
 
-    triangle_s = np.array([[1,0,-1,1], [0,1,0,0]])
-    print(triangle_s)
-    print(triangle_s[0,:])
-    print(triangle_s[1,:])
+    x0 = 0
+    y0 = 0
+    vx0 = 2
+    vy0 = 10
+    g= -9.81
 
-    posizione = np.array([0,0])
-    angolo = np.pi/2     #radianti
 
-    triangle = lib.AGS_corpi.Rigido(1, posizione,angolo, np.zeros(2), 1,triangle_s, 0 )
+    posizione = np.array([x0,y0])
+    velocity = np.array([vx0,vy0])
+
+    forma = np.array([[1,0,-1,1], [0,1,0,0]])   + np.array([0,-1/3])[:,np.newaxis]      #forma spostata rispetto al baricentro
+
+
+    mass = lib.AGS_corpi.Rigido(3,1, position=posizione, velocity=velocity, shape=forma)
+
+    print(mass.u0)
+
+    universo = lib.universe.Universe((mass,), gravity_a=g)
+
+    # print(mass.accelerationX(), mass.accelerationY())
+
+    universo.solve(3, 0.1)
+
+
+    #calcola la soluzione esatta del sistema
+    tsol = universo.tsol
+    xsol = x0 + vx0*tsol
+    ysol = y0 + vy0*tsol + 0.5*g*tsol**2
+
+    vxsol = np.full(tsol.shape, vx0)
+    vysol = vy0 + g*tsol
+
+
+    sol_exact = np.vstack((xsol, ysol, vxsol, vysol))                       #unione delle soluzioni calcolate in una matrice formata da una serie di vettori di stato
+                                                                            #per ogni istante di tempo
+
+    universo.sol_a = sol_exact
+
     
-    triangle.run_Physics()
-
-    triangle.draw(plt.subplots())
-
-
-
-    plt.show()  #plots the plot
+    universo.draw(do_animation=True)
 
 
 
