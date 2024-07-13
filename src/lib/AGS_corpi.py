@@ -21,6 +21,8 @@ class Corpo():
         self.u0 = np.concatenate((self.position, self.velocity))
         self.forces = []
 
+        self.shape=np.array([0,0])
+
         self.g = 0   #gravitational acceleration
 
     
@@ -42,13 +44,11 @@ class Point_mass(Corpo):
     def __init__(self, mass, position, velocity):
         super().__init__(mass, position, velocity)
 
-    def draw(self):
-        pass
-
 
 
 class Rigido(Corpo):
-    def __init__(self, mass, position, rotation_angle , velocity, angular_velocity, shape ,inertia):
+
+    def __init__(self, mass, position, rotation_angle=0 , velocity=np.zeros(2), angular_velocity=0 , shape= np.array([[1,0,-1,1], [0,1,0,0]]) , inertia= 1):
 
         """
         for polygon shape body

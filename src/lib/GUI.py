@@ -48,7 +48,6 @@ def plot_pos_vel_xy(sol_d, tsol,  TITLE, shape=np.array([0,0]), animate = False,
 
 
     """
-    # shape = np.array([[1,0,-1,1], [0,1,0,0]])
 
     fig,ax = plt.subplot_mosaic([['x', 'y', 'xy'], ['vx', 'vy', 'xy']])    
     fig.suptitle(TITLE)
@@ -125,11 +124,14 @@ def plot_pos_vel_xy(sol_d, tsol,  TITLE, shape=np.array([0,0]), animate = False,
         shape_shifted = shape + sol_d.y[:2,frame, np.newaxis]
         polygon.set_xdata(shape_shifted[0])
         polygon.set_ydata(shape_shifted[1])
-        return polygon
+        L.get_texts()[3].set_text(f"T={round(frame*dt, 2)}") 
+
+        return (polygon, L)
 
 
     if animate:
-        polygon = ax['xy'].plot(shape[0], shape[1], 'o-b')[0]
+        polygon = ax['xy'].plot(shape[0], shape[1], 'o-b', label= 'T=0')[0]
+        L = ax['xy'].legend()
 
     ani = animation.FuncAnimation(fig=fig, func=update_animation_graph, frames=int(T/dt), interval=dt*1000) 
 

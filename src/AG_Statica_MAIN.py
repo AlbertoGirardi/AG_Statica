@@ -17,7 +17,7 @@ def MAIN():
 
     x0 = 0
     y0 = 0
-    vx0 = 6
+    vx0 = 2
     vy0 = 10
     g= -9.81
 
@@ -25,8 +25,10 @@ def MAIN():
     posizione = np.array([x0,y0])
     velocity = np.array([vx0,vy0])
 
+    forma = np.array([[1,0,-1,1], [0,1,0,0]])   + np.array([0,-1/3])[:,np.newaxis]      #forma spostata rispetto al baricentro
 
-    mass = lib.AGS_corpi.Point_mass(3, posizione, velocity)
+
+    mass = lib.AGS_corpi.Rigido(3, position=posizione, velocity=velocity, shape=forma)
 
     print(mass.u0)
 
@@ -53,8 +55,6 @@ def MAIN():
 
     
     universo.draw(do_animation=True)
-
-
 
 
 

@@ -57,4 +57,4 @@ class Universe:
 
 
     def draw(self, do_animation=False, time_ratio = 1):
-        lib.GUI.plot_pos_vel_xy(self.dynamic_solution, self.tsol,  "test", sol_a=self.sol_a, animate=do_animation, T=self.T, dt= self.dt)
+        lib.GUI.plot_pos_vel_xy(self.dynamic_solution, self.tsol,  "test", shape=self.bodylist[0].shape, sol_a=self.sol_a, animate=do_animation, T=self.T, dt= self.dt)
