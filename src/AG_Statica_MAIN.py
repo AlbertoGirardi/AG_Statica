@@ -8,7 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import lib.universe 
 
-from lib.auxiliary import ForceGravity, ConstantForce
+from lib.auxiliary import *
 
 
 
@@ -49,8 +49,9 @@ def MAIN():
 
 
     mass.addForce([ForceGravity(), ConstantForce(np.array([0,0,M]))])
+
     T=3
-    dt = 1/10
+    dt = 1/24
 
     universo.solve(T, dt)
 
@@ -72,7 +73,7 @@ def MAIN():
     universo.sol_a = sol_exact
 
     # print(universo.dynamic_solution.y)
-    universo.draw(do_animation=True, time_ratio=1)
+    universo.draw("CORPO ROTANTE IN CADUTA",do_animation=True, time_ratio=1)
 
 
 

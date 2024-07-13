@@ -44,6 +44,7 @@ class ConstantForce(Force):
      return self.force
   
 
+
 class ForceGravity(ConstantForce):
    
   def __init__(self):
@@ -53,9 +54,10 @@ class ForceGravity(ConstantForce):
     return np.array([0, body.universe.g*body.mass, 0])
   
 
+
+
 if __name__ == '__main__':   
    
-
-   
+    #test code
    f= ConstantForce(np.array([3,2,0]))
    print(f())

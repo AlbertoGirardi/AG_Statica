@@ -8,7 +8,6 @@ from .auxiliary import *
 scale = 3
 
 
-
 def draw_polygon(plot, shape, rotation_angle, position):
 
     """obsoleta"""

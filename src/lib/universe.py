@@ -34,6 +34,9 @@ class Universe:
 
         if self.n_bodies != 1:
             raise RuntimeError("only one body system")
+        
+        b1 = self.bodylist[0]
+        self.u0 = np.concatenate((b1.position,[b1.rotation_angle], b1.velocity, [b1.angular_velocity]))
 
 
     def solve(self, T, dt):
@@ -48,7 +51,7 @@ class Universe:
         self.dt = dt
         self.T = T
 
-        self.dynamic_solution = solve_ivp(self, [0, self.T], self.bodylist[0].u0 , method='RK45', t_eval=self.tsol)
+        self.dynamic_solution = solve_ivp(self, [0, self.T], self.u0 , method='RK45', t_eval=self.tsol)
 
 
 
@@ -73,6 +76,7 @@ class Universe:
         dvx = accelerations[0]         #ottiene accelerazione del corpo nelle due direzioni
         dvy = accelerations[1]
         dw = accelerations[2]
+
         return [dx, dy, dphi, dvx, dvy, dw]               #ritorna il vettore FLUSSO
 
 
@@ -81,7 +85,7 @@ class Universe:
 
 
 
-    def draw(self, do_animation=False, time_ratio = 1):
+    def draw(self, titolo, do_animation=False,  time_ratio = 1):
 
         """draws the (for now) single body of the universe, using matplotlib
 
@@ -89,5 +93,5 @@ class Universe:
 
             the time ratio sets the ratio between simulation time and real time
             """
-        lib.GUI.plot_pos_vel_xy(self.dynamic_solution, self.tsol,  "test", shape=self.bodylist[0].shape,
+        lib.GUI.plot_pos_vel_xy(self.dynamic_solution, self.tsol,  titolo, shape=self.bodylist[0].shape,
                                  sol_a=self.sol_a, animate=do_animation, T=self.T, dt= self.dt, time_ratio=time_ratio)
