@@ -1,6 +1,9 @@
 import numpy as np
 
 
+
+#(- self.k / (np.linalg.norm(u[:2])**2)) *(u[:2])     #1D GRAVITY LAW
+
 def rotation_matrix2D(alfa):
 
     """returns a rotation matrix for the given angle in radiants"""
@@ -8,6 +11,23 @@ def rotation_matrix2D(alfa):
     RM2D= [[np.cos(alfa),-np.sin(alfa)],
       [np.sin(alfa),np.cos(alfa)]]
     return RM2D
+
+
+
+def MRUA(tsol, x0, y0, vx0, vy0, ax, ay, a0, w0, e):
+   
+    xsol = x0 + vx0*tsol + 0.5*ax*tsol**2
+    ysol = y0 + vy0*tsol + 0.5*ay*tsol**2
+
+    vxsol = vx0 + ax*tsol
+    vysol = vy0 + ay*tsol
+
+    asol = a0 + w0*tsol + 0.5*e*tsol**2
+
+    wsol = w0 + e*tsol
+
+    return np.vstack((xsol, ysol, asol, vxsol, vysol, wsol))                       #unione delle soluzioni calcolate in una matrice formata da una serie di vettori di stato
+                                                                            #per ogni istante di tempo
 
 
 
@@ -55,9 +75,26 @@ class ForceGravity(ConstantForce):
   
 
 
+class Spring2D(Force):
+   
+    def __init__(self, k, abs_attachment, local_attachment):
+      self.k = k
+
+    def calculateForce(self, body, t, u):
+
+        dL = np.linalg.norm(u[:2])
+        L_ = u[:2]/dL
+       
+        F = (- self.k * dL* L_)                 #HOOK LAW
+
+        print(F, np.linalg.norm(F)- dL*self.k )   #test that is correct
+        return np.concatenate([F, [0]])
+       
+    
+      
+
 
 if __name__ == '__main__':   
    
     #test code
-   f= ConstantForce(np.array([3,2,0]))
-   print(f())
+    pass

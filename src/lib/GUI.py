@@ -2,10 +2,22 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
 
+import os
+
 from . import AGS_corpi
 from .auxiliary import *
 
 scale = 3
+
+
+def get_incremental_filename(base_dir, base_name, ext):
+    i = 1
+    while True:
+        filename = f"{base_name}_{i}.{ext}"
+        filepath = os.path.join(base_dir, filename)
+        if not os.path.exists(filepath):
+            return filepath
+        i += 1
 
 
 def draw_polygon(plot, shape, rotation_angle, position):
@@ -107,6 +119,8 @@ def plot_pos_vel_xy(sol_d, tsol,  TITLE, shape=np.array([0,0]), animate = False,
         ax['x'].plot(tsol, sol_a[0,:],'-b',label = 'exact')
         ax['a'].plot(tsol, sol_a[2,:],'-b',label = 'exact')
         ax['w'].plot(tsol, sol_a[5,:],'-b',label = 'exact')
+        ax['xy'].plot(sol_a[0,:], sol_a[1,:] , 'c',label = 'exact')
+
 
 
 
@@ -120,7 +134,6 @@ def plot_pos_vel_xy(sol_d, tsol,  TITLE, shape=np.array([0,0]), animate = False,
     ax['xy'].plot(0,0,  'or')  #marking origin
     ax['xy'].set_xlabel("x[m]")
     ax['xy'].set_ylabel("y[m]")
-    ax['xy'].plot(sol_a[0,:], sol_a[1,:] , 'c',label = 'exact')
 
     ax['xy'].legend()
     ax['xy'].set_title("POSITION in XY PLANE")
@@ -156,7 +169,7 @@ def plot_pos_vel_xy(sol_d, tsol,  TITLE, shape=np.array([0,0]), animate = False,
             t_graphs[g].set_ydata( sol_d.y[graphs[g],frame])
 
 
-        L.get_texts()[3].set_text(f"T={round(frame*dt, 2) } s") 
+        L.get_texts()[-1].set_text(f"T={round(frame*dt, 2) } s") 
 
         return (polygon, L, t_graphs)
 
@@ -186,6 +199,6 @@ def plot_pos_vel_xy(sol_d, tsol,  TITLE, shape=np.array([0,0]), animate = False,
     fig.tight_layout()
     fig.set_size_inches(14, 8)
   
-
+    fig.savefig(get_incremental_filename('data\\plots', 'AG_traiettoria', 'png'), dpi = 200)
     plt.show()
 
