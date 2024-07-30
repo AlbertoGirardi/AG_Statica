@@ -77,17 +77,22 @@ class ForceGravity(ConstantForce):
 
 class Spring2D(Force):
    
-    def __init__(self, k, abs_attachment, local_attachment):
+    def __init__(self, k, l0,  abs_attachment, local_attachment):
       self.k = k
+      self.L0 = l0
+      print(self.L0)
 
     def calculateForce(self, body, t, u):
+        
+        d = u[:2]
+        L = np.linalg.norm(d)
+        dL = ( L - self.L0 )     #spring contraction/extension
 
-        dL = np.linalg.norm(u[:2])
-        L_ = u[:2]/dL
+        L_ = d/abs(L)                   #versor of spring force
        
         F = (- self.k * dL* L_)                 #HOOK LAW
-
-        print(F, np.linalg.norm(F)- dL*self.k )   #test that is correct
+        # print(dL, F[0])
+        print(F, np.linalg.norm(F) - dL*self.k )   #test that is correct
         return np.concatenate([F, [0]])
        
     

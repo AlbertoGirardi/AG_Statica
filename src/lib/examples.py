@@ -2,6 +2,7 @@ import lib.AGS_corpi
 import numpy as np
 import matplotlib.pyplot as plt
 import lib.universe 
+import math
 
 from lib.auxiliary import *
 
@@ -13,9 +14,9 @@ def CorpoRotanteCaduta():
     #valori di partenza per il problema
     x0 = 0
     y0 = 2
-    vx0 = 8
-    vy0 = 11
-    g= -9.81
+    vx0 = 0
+    vy0 = 0
+    g= 0
 
     posizione = np.array([x0,y0])
     velocity = np.array([vx0,vy0])
@@ -42,7 +43,7 @@ def CorpoRotanteCaduta():
     mass.addForce([ForceGravity(), ConstantForce(np.array([0,0,M]))])
 
     T=3
-    dt = 1/10
+    dt = 1/24
 
     universo.solve(T, dt)
 
@@ -54,3 +55,62 @@ def CorpoRotanteCaduta():
     universo.draw("CORPO ROTANTE IN CADUTA",do_animation=True, time_ratio=1)
 
 
+
+
+def CorpoMolla():
+    
+    x0 = 12
+    y0 = 0
+    vx0 = 0
+    vy0 = 0
+
+    g = 0
+
+    posizione = np.array([x0,y0])
+    velocity = np.array([vx0,vy0])
+
+    forma = np.array([[1,0,-1,1], [0,1,0,0]])   + np.array([0,-1/3])[:,np.newaxis]      #forma spostata rispetto al baricentro
+
+    w = np.pi*2/1.5 *0
+    a = np.pi/2 *0
+
+
+    inertia = 0.4
+    
+
+    k = 1
+
+    #definizione oggetto corpo
+    mass = lib.AGS_corpi.Rigido(mass=3,inertia=inertia, position=posizione, velocity=velocity, shape=forma, rotation_angle=a, angular_velocity=w )
+    # print(mass.u0)
+
+
+    universo = lib.universe.Universe((mass,), gravity_a=g)
+
+    molla = Spring2D(k, 8, np.zeros(2), np.zeros(2))
+
+    mass.addForce([molla, ForceGravity()])
+
+    T=  100
+    dt = 1/10
+
+    universo.solve(T, dt)
+
+    tsol = universo.tsol
+
+    omegax = math.sqrt(k/mass.mass)
+
+    xsol = x0*np.cos(omegax*tsol) + vx0/omegax*np.sin(omegax*tsol)           #soluzioni analitiche posizione x e y 
+
+    vxsol  = -omegax*x0*np.sin(omegax*tsol) + vx0*np.cos(omegax*tsol)           #soluzioni a. velocità
+
+    # ysol = tsol*0
+    # asol = tsol*0
+    # vysol = tsol*0
+    # wsol = tsol*0
+
+
+    # # calcola la soluzione esatta del sistema
+    # universo.sol_a =  np.vstack((xsol, ysol, asol, vxsol, vysol, wsol))  
+    # print(universo.dynamic_solution.y)
+    universo.draw("CORPO COLLEGATO AD UNA MOLLA",do_animation=True, time_ratio=1)

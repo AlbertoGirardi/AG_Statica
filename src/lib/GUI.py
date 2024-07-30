@@ -200,5 +200,6 @@ def plot_pos_vel_xy(sol_d, tsol,  TITLE, shape=np.array([0,0]), animate = False,
     fig.set_size_inches(14, 8)
   
     fig.savefig(get_incremental_filename('data\\plots', 'AG_traiettoria', 'png'), dpi = 200)
+    # ani.save(get_incremental_filename('data\\plots', 'AG_traiettoria', 'mp4'), writer='ffmpeg')
     plt.show()
 
