@@ -8,6 +8,14 @@ Progetto PCTO, ITST J.F. Kennedy, 3^ A MP
 Programma per risoluzione di strutture statiche sottoposte a carichi noti.
 In sviluppo
 
+
+Dependencies:
+- python interpreter 3.11
+- numpy
+- matplotlib
+- scipy
+
+
 Per ulteriori informazioni riferirsi alla cartella [doc](/doc)
 
 

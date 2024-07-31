@@ -1,4 +1,5 @@
 import numpy as np
+import os
 
 
 
@@ -47,7 +48,7 @@ class Force():
     raise NotImplementedError("This class should never be used directly")
 
 
-class ConstantForce(Force):
+class ConstantForceB(Force):
    
 
   def __init__(self, force):
@@ -65,7 +66,7 @@ class ConstantForce(Force):
   
 
 
-class ForceGravity(ConstantForce):
+class ForceGravity(ConstantForceB):
    
   def __init__(self):
      pass
@@ -170,7 +171,30 @@ class Dampner(Force):
 
 
 
+
+
+
+def get_incremental_filename(base_dir, base_name, ext):
+
+    """
+    base_dir: directory
+    base_name: fine name
+    ext: extension of file
+    returns "directory/base_name[n].ext"  with n is a number to version files
+ 
+    """
+    i = 1
+    while True:
+        filename = f"{base_name}_{i}.{ext}"
+        filepath = os.path.join(base_dir, filename)
+        if not os.path.exists(filepath):
+            return filepath
+        i += 1
+
+
+
 if __name__ == '__main__':   
    
     #test code
     pass
+

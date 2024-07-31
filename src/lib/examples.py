@@ -1,6 +1,5 @@
 import lib.AGS_corpi
 import numpy as np
-import matplotlib.pyplot as plt
 import lib.universe 
 import math
 
@@ -21,7 +20,7 @@ def CorpoRotanteCaduta():
     posizione = np.array([x0,y0])
     velocity = np.array([vx0,vy0])
 
-    forma = np.array([[1,0,-1,1], [0,1,0,0]])   + np.array([0,-1/3])[:,np.newaxis]      #forma spostata rispetto al baricentro
+    forma = np.array([[1,0,-1,1], [0,1,0,0]])  + np.array([0,-1/3])[:,np.newaxis]      #forma spostata rispetto al baricentro
 
     w = np.pi*2/1.5 
     a = np.pi/2
@@ -40,7 +39,7 @@ def CorpoRotanteCaduta():
     universo = lib.universe.Universe((mass,), gravity_a=g)
 
 
-    mass.addForce([ForceGravity(), ConstantForce(np.array([0,0,M]))])
+    mass.addForce([ForceGravity(), ConstantForceB(np.array([0,0,M]))])
 
     T=3
     dt = 1/24
