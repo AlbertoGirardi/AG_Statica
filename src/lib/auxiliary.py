@@ -5,6 +5,9 @@ import os
 
 #(- self.k / (np.linalg.norm(u[:2])**2)) *(u[:2])     #1D GRAVITY LAW
 
+rotmT = np.array([[0, -1], [1,0]])          #rotation matrix for perpendicular vector
+
+
 def rotation_matrix2D(alfa):
 
     """returns a rotation matrix for the given angle in radiants"""
@@ -32,6 +35,30 @@ def MRUA(tsol, x0, y0, vx0, vy0, ax, ay, a0, w0, e):
 
 
 
+def TorqueVarignon(f, r):
+    
+    """
+    Given a force f applied with arm r (absolute coordinates) calculates the TORQUE
+    """
+    
+    rT = rotmT@r
+
+    M = rT@f
+    
+    return M
+
+
+
+def ForceTorque(f, r, alfa):
+
+    """returns force-torque vector given force and arm and rotation angle"""
+   
+    Rot = rotation_matrix2D(alfa)
+    return np.concatenate([f, [TorqueVarignon(f, Rot@r)]])
+
+
+
+   
 
 class Force():
 
@@ -48,22 +75,54 @@ class Force():
     raise NotImplementedError("This class should never be used directly")
 
 
+
+
 class ConstantForceB(Force):
-   
+    """
+    Class for a constant force an pure torque applied at the barycenter
+    """
 
-  def __init__(self, force):
+    def __init__(self, force):
       
-      """force: 3 element ARRAY:  [Fx, Fy, M]"""
+        """force: 3 element ARRAY:  [Fx, Fy, M]"""
 
-      self.force = force
-      print (np.shape(force))
-      if np.shape(force) != (3,):
-         raise ValueError("Incorrect dimensions of the force vector")
+        self.force = force
+        # print (np.shape(force))
+        if np.shape(force) != (3,):
+            raise ValueError("Incorrect dimensions of the force vector")
 
-  def calculateForce(self, body, t, u):
+    def calculateForce(self, body, t, u):
      
      return self.force
-  
+
+
+
+
+
+class ConstantForce(Force):
+    """
+    Class for a constant force applied at a given point of the body
+    """
+
+    def __init__(self, force, arm):
+      
+        """force: 2 element ARRAY:  [Fx, Fy], absolute coordinates
+           arm: vector 2d that is the application point of the force in the local body coordinates"""
+
+        self.force = force
+        self.arm = arm
+        # print (np.shape(force))
+        if np.shape(force) != (2,):
+            raise ValueError("Incorrect dimensions of the force vector")
+
+    def calculateForce(self, body, t, u):
+     
+        alpha = u[2]
+        return ForceTorque(self.force, self.arm, alpha)
+
+    
+
+
 
 
 class ForceGravity(ConstantForceB):
@@ -124,7 +183,7 @@ class Spring(Force):
 
         # print(dL, F[0])
         # print(F, np.linalg.norm(F) - dL*self.k )   #test that is correct
-        return np.concatenate([F, [0]])
+        return ForceTorque(F, self.attachmentBody, u[2])
        
 
 
@@ -160,13 +219,19 @@ class Dampner(Force):
         L = np.linalg.norm(d)           #lenght of dampner
         d_ = d/abs(L)                   #versor of  force direction
 
+        
+        if L == 0:  
+           #if the lenght of the spring is 0, it is impossible to predict in which direction it will exert a force
+           raise RuntimeError("Singularity: unpredictable future")
+
+
         vL = d_@v                       #velocity in the direction of the dampner
 
         f = vL * self.b                 #calculate force magnitude
 
         F = - d_ * f                    #calculate force vector 
         
-        return np.concatenate([F, [0]])
+        return ForceTorque(F, self.attachmentBody, u[2])
 
 
 
@@ -196,5 +261,5 @@ def get_incremental_filename(base_dir, base_name, ext):
 if __name__ == '__main__':   
    
     #test code
-    pass
+    print(rotation_matrix2D(np.pi/2))
 

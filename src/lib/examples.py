@@ -12,7 +12,7 @@ def CorpoRotanteCaduta():
     
     #valori di partenza per il problema
     x0 = 0
-    y0 = 2
+    y0 = 0
     vx0 = 0
     vy0 = 0
     g= 0
@@ -22,8 +22,8 @@ def CorpoRotanteCaduta():
 
     forma = np.array([[1,0,-1,1], [0,1,0,0]])  + np.array([0,-1/3])[:,np.newaxis]      #forma spostata rispetto al baricentro
 
-    w = np.pi*2/1.5 
-    a = np.pi/2
+    w = np.pi*2/1.5 *0
+    a = np.pi/2 *0
 
     M = 0
 
@@ -39,7 +39,7 @@ def CorpoRotanteCaduta():
     universo = lib.universe.Universe((mass,), gravity_a=g)
 
 
-    mass.addForce([ForceGravity(), ConstantForceB(np.array([0,0,M]))])
+    mass.addForce([ForceGravity(), ConstantForce(np.array([0,1]), np.array([-1,0]))])
 
     T=3
     dt = 1/24
@@ -70,14 +70,14 @@ def CorpoMolla():
 
     forma = np.array([[1,0,-1,1], [0,1,0,0]])   + np.array([0,-1/3])[:,np.newaxis]      #forma spostata rispetto al baricentro
 
-    w = np.pi*2/1.5 *0.2
+    w = np.pi*2/1.5 *0.0
     a = np.pi/2 *0
 
 
-    inertia = 0.4
+    inertia = 3
     
 
-    k = 5
+    k = 3
 
     #definizione oggetto corpo
     mass = lib.AGS_corpi.Rigido(mass=3,inertia=inertia, position=posizione, velocity=velocity, shape=forma, rotation_angle=a, angular_velocity=w )
@@ -87,13 +87,15 @@ def CorpoMolla():
     universo = lib.universe.Universe((mass,), gravity_a=g)
 
     aggancio = np.array([0,0])
+    aggancio2 = np.array([-1,-1/3])
+    
 
-    molla = Spring(k, 14.1, aggancio, np.zeros(2))
-    smorzatore = Dampner(2, aggancio, np.zeros(2) )
+    molla = Spring(k, 14.1, aggancio, aggancio2)
+    smorzatore = Dampner(2, aggancio, aggancio2 )
 
     mass.addForce([molla, smorzatore,  ForceGravity()])
 
-    T=  40
+    T=  20
     dt = 1/10
 
     universo.solve(T, dt)
