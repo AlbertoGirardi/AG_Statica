@@ -49,14 +49,14 @@ def draw_polygon(plot, shape, rotation_angle, position):
 
 
 
-def plot_pos_vel_xy(sol_d, tsol,  TITLE, shape=np.array([0,0]), animate = False, sol_a=None, T=5, dt=1/10, time_ratio = 1 ):
+def plot_pos_vel_xy(sol_d, tsol,  TITLE, shape=np.array([0,0]), animate = False, sol_a=None, T=5, dt=1/10, time_ratio = 1, save_img = True, save_vid = False ):
 
     """PLOTS X, Y POSITION, X,Y VELOCITY against time
     and position in XY plane
     
     sol_d: scipy solver solution, in the form of state vector  [x,y,vx,vy]
-    sol_a: solution to compare to, in the form of state vector (if not provided is not plotted)
     tsol: array of time istants for which solution has been calculated
+    sol_a: solution to compare to, in the form of state vector (if not provided is not plotted)
     animate: do a matplotlib animation of the xy graph
 
 

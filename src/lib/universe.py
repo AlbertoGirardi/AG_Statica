@@ -12,6 +12,12 @@ class Universe:
 
     def __init__(self, bodylist, gravity_a = 0):
 
+        """
+        bodylist: list of bodies (1 MAX)
+        gravity_a: gravitationa acceleration of the universe (negative -> downward) 
+        
+        """
+
 
         self.bodylist = bodylist
         self.n_bodies = len(self.bodylist)              #numero di corpi
@@ -37,6 +43,10 @@ class Universe:
         
         b1 = self.bodylist[0]
         self.u0 = np.concatenate((b1.position,[b1.rotation_angle], b1.velocity, [b1.angular_velocity]))
+
+        # print(self.u0)
+        # print(self.u0[3:5])
+
 
 
 
@@ -72,13 +82,13 @@ class Universe:
         dy = vy
         dphi = w
 
-        accelerations = self.bodylist[0].Force(t, u) / np.diag(self.Mass_matrix)
+        accelerations = self.bodylist[0].Force(t, u) / np.diag(self.Mass_matrix)        #CALCULATES ACCELERATIONS FROM TOTAL FORCE AND MASS-INERTIA MATRIX
 
-        dvx = accelerations[0]         #ottiene accelerazione del corpo nelle due direzioni
+        dvx = accelerations[0]                                                          #gets accelerations in the various dimensions
         dvy = accelerations[1]
         dw = accelerations[2]
 
-        return [dx, dy, dphi, dvx, dvy, dw]               #ritorna il vettore FLUSSO
+        return [dx, dy, dphi, dvx, dvy, dw]                                              #ritorna il vettore FLUSSO
 
 
         

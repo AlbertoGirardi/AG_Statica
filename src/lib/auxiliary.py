@@ -76,43 +76,98 @@ class ForceGravity(ConstantForce):
 
 
 class Spring(Force):
+
+    """CLASS FOR A 2D SPRING
+        exerts a force based on Hook Law
+       
+        """
    
     def __init__(self, k, l0,  abs_attachment, local_attachment):
+      
+      """
+        k: spring constant [N/m]
+        l0: length of the spring at rest [m]
+        abs_attachment: point in the global coordinate space where spring is attached [2d vector]
+        local_attachment: point in the local (body) coordinate space where spring is attached [2d vector] #TODO 
 
+      
+      """
       self.k = k
       self.L0 = l0
       self.attachment1 = abs_attachment
       self.attachmentBody = local_attachment
-      print(self.attachment1)
-      print(self.L0)
+    #   print(self.attachment1)
+    #   print(self.L0)
+
+
 
     def calculateForce(self, body, t, u):
-        
-        d = u[:2] - self.attachment1
-        print(u[:2])
-        L = np.linalg.norm(d)
 
-        if L == 0:
+        #RETURNS FORCE VECTOR OF THE SPRING
+
+        d = u[:2]  - self.attachment1                       #vector that rapresents spring direction
+        # print(u[:2])
+        L = np.linalg.norm(d)                               #lenght of the spring
+
+        if L == 0:  
+           #if the lenght of the spring is 0, it is impossible to predict in which direction it will exert a force
            raise RuntimeError("Singularity: unpredictable future")
 
-        dL = ( L - self.L0 )     #spring contraction/extension
+        dL = ( L - self.L0 )                                #spring contraction/extension
 
 
         # print(L)
-        L_ = d/abs(L)                   #versor of spring force
+        d_ = d/abs(L)                                       #versor of spring force
 
-        F = (- self.k * dL* L_)                 #HOOK LAW
+        F = (- self.k * dL* d_)                             #HOOK LAW, returning vector force
 
         # print(dL, F[0])
         # print(F, np.linalg.norm(F) - dL*self.k )   #test that is correct
         return np.concatenate([F, [0]])
        
 
+
 class Dampner(Force):
 
-    def __init__(self, k):
-       self.k  = k
-      
+    """
+    Exerts a damping force proportional to the relative speed
+    """
+
+
+    def __init__(self, b, abs_attachment, local_attachment):
+
+        """
+        b: constant of proportionality between speed and force 
+
+        abs_attachment: point in the global coordinate space where spring is attached [2d vector]
+        local_attachment: point in the local (body) coordinate space where spring is attached [2d vector] #TODO 
+        """
+
+        self.b  = b
+        self.attachment1 = abs_attachment
+        self.attachmentBody = local_attachment   
+
+
+    def calculateForce(self, body, t, u):
+
+        #returns the dampner force in vector form
+
+        d = u[:2]  - self.attachment1           #vector rapresenting dampner
+        v = u[3:5]                                #velocity of body respect to dampner attachment
+
+        # print(u[:2])
+        L = np.linalg.norm(d)           #lenght of dampner
+        d_ = d/abs(L)                   #versor of  force direction
+
+        vL = d_@v                       #velocity in the direction of the dampner
+
+        f = vL * self.b                 #calculate force magnitude
+
+        F = - d_ * f                    #calculate force vector 
+        
+        return np.concatenate([F, [0]])
+
+
 
 
 if __name__ == '__main__':   

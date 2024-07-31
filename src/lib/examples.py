@@ -59,19 +59,19 @@ def CorpoRotanteCaduta():
 
 def CorpoMolla():
     
-    x0 = 5
-    y0 = -11
+    x0 = 14
+    y0 = -14
     vx0 = 0
     vy0 = 0
 
-    g = 0
+    g = -9.81
 
     posizione = np.array([x0,y0])
     velocity = np.array([vx0,vy0])
 
     forma = np.array([[1,0,-1,1], [0,1,0,0]])   + np.array([0,-1/3])[:,np.newaxis]      #forma spostata rispetto al baricentro
 
-    w = np.pi*2/1.5 *0
+    w = np.pi*2/1.5 *0.2
     a = np.pi/2 *0
 
 
@@ -87,11 +87,14 @@ def CorpoMolla():
 
     universo = lib.universe.Universe((mass,), gravity_a=g)
 
-    molla = Spring(k, 8, np.array([5,0]), np.zeros(2))
+    aggancio = np.array([0,0])
 
-    mass.addForce([molla, ForceGravity()])
+    molla = Spring(k, 14.1, aggancio, np.zeros(2))
+    smorzatore = Dampner(2, aggancio, np.zeros(2) )
 
-    T=  15
+    mass.addForce([molla, smorzatore,  ForceGravity()])
+
+    T=  40
     dt = 1/10
 
     universo.solve(T, dt)
