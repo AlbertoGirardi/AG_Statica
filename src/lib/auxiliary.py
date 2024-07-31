@@ -75,27 +75,43 @@ class ForceGravity(ConstantForce):
   
 
 
-class Spring2D(Force):
+class Spring(Force):
    
     def __init__(self, k, l0,  abs_attachment, local_attachment):
+
       self.k = k
       self.L0 = l0
+      self.attachment1 = abs_attachment
+      self.attachmentBody = local_attachment
+      print(self.attachment1)
       print(self.L0)
 
     def calculateForce(self, body, t, u):
         
-        d = u[:2]
+        d = u[:2] - self.attachment1
+        print(u[:2])
         L = np.linalg.norm(d)
+
+        if L == 0:
+           raise RuntimeError("Singularity: unpredictable future")
+
         dL = ( L - self.L0 )     #spring contraction/extension
 
+
+        # print(L)
         L_ = d/abs(L)                   #versor of spring force
-       
+
         F = (- self.k * dL* L_)                 #HOOK LAW
+
         # print(dL, F[0])
-        print(F, np.linalg.norm(F) - dL*self.k )   #test that is correct
+        # print(F, np.linalg.norm(F) - dL*self.k )   #test that is correct
         return np.concatenate([F, [0]])
        
-    
+
+class Dampner(Force):
+
+    def __init__(self, k):
+       self.k  = k
       
 
 

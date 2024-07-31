@@ -59,8 +59,8 @@ def CorpoRotanteCaduta():
 
 def CorpoMolla():
     
-    x0 = 12
-    y0 = 0
+    x0 = 5
+    y0 = -11
     vx0 = 0
     vy0 = 0
 
@@ -78,7 +78,7 @@ def CorpoMolla():
     inertia = 0.4
     
 
-    k = 1
+    k = 5
 
     #definizione oggetto corpo
     mass = lib.AGS_corpi.Rigido(mass=3,inertia=inertia, position=posizione, velocity=velocity, shape=forma, rotation_angle=a, angular_velocity=w )
@@ -87,11 +87,11 @@ def CorpoMolla():
 
     universo = lib.universe.Universe((mass,), gravity_a=g)
 
-    molla = Spring2D(k, 8, np.zeros(2), np.zeros(2))
+    molla = Spring(k, 8, np.array([5,0]), np.zeros(2))
 
     mass.addForce([molla, ForceGravity()])
 
-    T=  100
+    T=  15
     dt = 1/10
 
     universo.solve(T, dt)
