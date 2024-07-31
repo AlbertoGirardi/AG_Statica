@@ -2,8 +2,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def coord_transform_local_absolute(local_coord, local_origin, angle):
-    pass
 
 rotmT = np.array([[0, -1], [1,0]])
 

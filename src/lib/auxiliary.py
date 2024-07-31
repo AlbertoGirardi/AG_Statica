@@ -1,6 +1,7 @@
 import numpy as np
 import os
 
+import matplotlib.pyplot as plt
 
 
 #(- self.k / (np.linalg.norm(u[:2])**2)) *(u[:2])     #1D GRAVITY LAW
@@ -59,6 +60,64 @@ def ForceTorque(f, r, alfa):
 
 
    
+def coord_transform_loc_to_abs(local_coord, local_origin, angle):
+
+    """
+    Transforms a local coordinate into absolute frame of reference
+    local_origin: origin of the local system 2d vector
+    angle: orientatio of the local system
+    
+    """
+    
+    Rot = rotation_matrix2D(angle)
+
+    s = Rot@local_coord
+
+    return local_coord + local_origin
+
+
+
+def coord_local_to_abs_u(loc_c, u):
+   
+   """
+   Transforms a local coordinate into absolute frame of reference
+   u: state vector
+   """
+   
+   return coord_transform_loc_to_abs(local_coord=loc_c, local_origin=u[:2], angle=u[2])
+
+
+
+def velocity_transform_loc_to_abs(v_orgin, alpha,  omega, sigma):
+
+    """
+    
+    
+    """
+
+    Rot = rotation_matrix2D(alpha)                          #rotation matrix to calculate position vector in abs coord (only in orientation)
+    s = Rot@sigma                                           #calculate the position vector in abs coord, origin = body barycenter
+
+    sT = rotmT@s                                        #vector perpendicular to original
+    v_a = v_orgin + omega * sT                         #calculate velocity, summing the component of the barycenter and the tangetial velocity
+    
+
+
+    # fig, ax = plt.subplots()
+    # scale = 4
+    # ax.set(xlim=[-scale, scale], ylim=[-scale, scale], xlabel='X[m]', ylabel='Y [m]') 
+    # ax.set_aspect('equal', adjustable='box')
+    # plt.quiver(0, 0, sigma[0], sigma[1], angles='xy', scale_units='xy', scale=1, color='r')
+    # plt.quiver(0, 0, s[0], s[1], angles='xy', scale_units='xy', scale=1, color='b')
+    # plt.quiver(s[0], s[1], sT[0], sT[1], angles='xy', scale_units='xy', scale=1, color='g')
+    # plt.quiver(0,0, v_a[0], v_a[1], angles='xy', scale_units='xy', scale=1, color='y')
+    # plt.quiver(0,0, v_orgin[0], v_orgin[1], angles='xy', scale_units='xy', scale=1, color='g')
+    # plt.grid(True)
+    # plt.show()
+
+    return v_a
+
+
 
 class Force():
 
@@ -126,6 +185,11 @@ class ConstantForce(Force):
 
 
 class ForceGravity(ConstantForceB):
+  
+  """
+  Applies gravity to the body
+  
+  """
    
   def __init__(self):
      pass
@@ -133,6 +197,8 @@ class ForceGravity(ConstantForceB):
   def calculateForce(self, body, t, u):
     return np.array([0, body.universe.g*body.mass, 0])
   
+
+
 
 
 class Spring(Force):
@@ -148,7 +214,7 @@ class Spring(Force):
         k: spring constant [N/m]
         l0: length of the spring at rest [m]
         abs_attachment: point in the global coordinate space where spring is attached [2d vector]
-        local_attachment: point in the local (body) coordinate space where spring is attached [2d vector] #TODO 
+        local_attachment: point in the local (body) coordinate space where spring is attached [2d vector] 
 
       
       """
@@ -160,12 +226,11 @@ class Spring(Force):
     #   print(self.L0)
 
 
-
     def calculateForce(self, body, t, u):
 
         #RETURNS FORCE VECTOR OF THE SPRING
 
-        d = u[:2]  - self.attachment1                       #vector that rapresents spring direction
+        d = coord_local_to_abs_u(self.attachmentBody ,u)  - self.attachment1                       #vector that rapresents spring direction
         # print(u[:2])
         L = np.linalg.norm(d)                               #lenght of the spring
 
@@ -187,6 +252,8 @@ class Spring(Force):
        
 
 
+
+
 class Dampner(Force):
 
     """
@@ -200,7 +267,7 @@ class Dampner(Force):
         b: constant of proportionality between speed and force 
 
         abs_attachment: point in the global coordinate space where spring is attached [2d vector]
-        local_attachment: point in the local (body) coordinate space where spring is attached [2d vector] #TODO 
+        local_attachment: point in the local (body) coordinate space where spring is attached [2d vector] 
         """
 
         self.b  = b
@@ -212,8 +279,9 @@ class Dampner(Force):
 
         #returns the dampner force in vector form
 
-        d = u[:2]  - self.attachment1           #vector rapresenting dampner
-        v = u[3:5]                                #velocity of body respect to dampner attachment
+        d = coord_local_to_abs_u(self.attachmentBody ,u)  - self.attachment1           #vector rapresenting dampner
+
+        v = velocity_transform_loc_to_abs(u[3:5], u[2], u[5], self.attachmentBody)         #velocity of body attachment point respect to dampner attachment  
 
         # print(u[:2])
         L = np.linalg.norm(d)           #lenght of dampner
@@ -261,5 +329,8 @@ def get_incremental_filename(base_dir, base_name, ext):
 if __name__ == '__main__':   
    
     #test code
-    print(rotation_matrix2D(np.pi/2))
+    # print(rotation_matrix2D(np.pi/2))
+
+
+    print(velocity_transform_loc_to_abs(v_orgin=np.array([0,0]), alpha=np.pi, omega=1, sigma=np.array([1,0])))
 

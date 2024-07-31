@@ -74,7 +74,7 @@ def CorpoMolla():
     a = np.pi/2 *0
 
 
-    inertia = 3
+    inertia = 5 
     
 
     k = 3
@@ -87,13 +87,19 @@ def CorpoMolla():
     universo = lib.universe.Universe((mass,), gravity_a=g)
 
     aggancio = np.array([0,0])
-    aggancio2 = np.array([-1,-1/3])
+    aggancio2 = np.array([0,2/3])               #due punti per vedere il diverso comportamento
+    # aggancio2 = np.array([-1,-1/3])
+    aggancio3 = np.array([+1,-1/3])
+
+
     
 
     molla = Spring(k, 14.1, aggancio, aggancio2)
     smorzatore = Dampner(2, aggancio, aggancio2 )
+    smorzatore1 = Dampner(2, aggancio, aggancio3 )
 
-    mass.addForce([molla, smorzatore,  ForceGravity()])
+
+    mass.addForce([molla, smorzatore, smorzatore1, ForceGravity()])
 
     T=  20
     dt = 1/10
