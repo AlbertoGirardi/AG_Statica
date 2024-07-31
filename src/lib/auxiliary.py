@@ -91,7 +91,13 @@ def coord_local_to_abs_u(loc_c, u):
 def velocity_transform_loc_to_abs(v_orgin, alpha,  omega, sigma):
 
     """
+    calculates the velocity of a point given its position in the local coords, the velocity and rotation, angular velocity of the body
     
+    v_origin: 2d vector, velocity of local frame origin
+    alpha: rotation of the local frame respect to absolute
+    omega: angular velocity of body
+    sigma: position of the point in local frame
+
     
     """
 
@@ -101,7 +107,6 @@ def velocity_transform_loc_to_abs(v_orgin, alpha,  omega, sigma):
     sT = rotmT@s                                        #vector perpendicular to original
     v_a = v_orgin + omega * sT                         #calculate velocity, summing the component of the barycenter and the tangetial velocity
     
-
 
     # fig, ax = plt.subplots()
     # scale = 4
