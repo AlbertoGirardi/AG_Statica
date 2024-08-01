@@ -12,6 +12,12 @@ class Universe:
 
     def __init__(self, bodylist, gravity_a = 0):
 
+        """
+        bodylist: list of bodies (1 MAX)
+        gravity_a: gravitationa acceleration of the universe (negative -> downward) 
+        
+        """
+
 
         self.bodylist = bodylist
         self.n_bodies = len(self.bodylist)              #numero di corpi
@@ -38,24 +44,29 @@ class Universe:
         b1 = self.bodylist[0]
         self.u0 = np.concatenate((b1.position,[b1.rotation_angle], b1.velocity, [b1.angular_velocity]))
 
+        # print(self.u0)
+        # print(self.u0[3:5])
 
-    def solve(self, T, dt):
+
+
+
+    def solve(self, T, dt): 
 
         """SOLVES THE SYSTEM WITH RK45, via scipy
-            T: is the simulation timespan [s]
+            T : is the simulation timespan [s]
             dt: simulation timestep [s]
         """
 
-        self.N = int(T/dt)
-        self.tsol  = np.linspace(0,T,self.N+1)                                    #istanti per i quali si calcola la soluzione 
-        self.dt = dt
-        self.T = T
+        self.N    = int(T/dt)
+        self.tsol = np.linspace(0,T,self.N+1)                                    #istanti per i quali si calcola la soluzione
+        self.dt   = dt
+        self.T    = T
 
         self.dynamic_solution = solve_ivp(self, [0, self.T], self.u0 , method='RK45', t_eval=self.tsol)
 
 
 
-    def __call__(self, t, u):
+    def __call__(self, t, u): 
         
         
         """dato il vettore di stato u [x,y,phi,vx,vy, omega] e il tempo restituisce il vettore FLUSSO[vx, vy, omega, ax, ay, epsilon], calcolando l'accelerazione subita
@@ -64,20 +75,20 @@ class Universe:
 
         """
 
-        x, y, a , vx, vy, w = u                        #spacchettamento vettore di stato
+        x, y, a, vx, vy, w = u                        #spacchettamento vettore di stato
 
 
-        dx = vx                                 #dummy 
-        dy = vy
+        dx   = vx                                 #dummy
+        dy   = vy
         dphi = w
 
-        accelerations = self.bodylist[0].Force(t, u) / np.diag(self.Mass_matrix)
+        accelerations = self.bodylist[0].Force(t, u) / np.diag(self.Mass_matrix)        #CALCULATES ACCELERATIONS FROM TOTAL FORCE AND MASS-INERTIA MATRIX
 
-        dvx = accelerations[0]         #ottiene accelerazione del corpo nelle due direzioni
+        dvx = accelerations[0]                                                          #gets accelerations in the various dimensions
         dvy = accelerations[1]
-        dw = accelerations[2]
+        dw  = accelerations[2]
 
-        return [dx, dy, dphi, dvx, dvy, dw]               #ritorna il vettore FLUSSO
+        return [dx, dy, dphi, dvx, dvy, dw]                                              #ritorna il vettore FLUSSO
 
 
         

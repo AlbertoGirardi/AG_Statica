@@ -2,15 +2,22 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
 
+import os
+
 from . import AGS_corpi
 from .auxiliary import *
 
 scale = 3
 
 
+
+
+
 def draw_polygon(plot, shape, rotation_angle, position):
 
-    """obsoleta"""
+# **! OBSOLETO
+    """obsoleta
+    """
     print("drawing")
 
     fig,ax = plot
@@ -37,20 +44,28 @@ def draw_polygon(plot, shape, rotation_angle, position):
 
 
 
-def plot_pos_vel_xy(sol_d, tsol,  TITLE, shape=np.array([0,0]), animate = False, sol_a=None, T=5, dt=1/10, time_ratio = 1 ):
+def plot_pos_vel_xy(sol_d, tsol,  TITLE, shape=np.array([0,0]), animate = False, sol_a=None, T=5, dt=1/10, time_ratio = 1, save_img = True, save_vid = False ):
 
     """PLOTS X, Y POSITION, X,Y VELOCITY against time
     and position in XY plane
     
     sol_d: scipy solver solution, in the form of state vector  [x,y,vx,vy]
-    sol_a: solution to compare to, in the form of state vector (if not provided is not plotted)
     tsol: array of time istants for which solution has been calculated
+    TITLE: title
+    shape: array of points rapresenting the polygonal shape
     animate: do a matplotlib animation of the xy graph
+    sol_a: solution to compare to, in the form of state vector (if not provided is not plotted)
+    T = total time of simulation
+    dt = time step
+    time_ratio = plyback speed
+    save_img: saves image
+    save_vid = saves video of the animation
 
 
     """
 
-    fig,ax = plt.subplot_mosaic([['x', 'y','a', 'xy', 'xy','xy','xy'], ['vx', 'vy','w', 'xy', 'xy', 'xy','xy']])    
+    #create graph with multiple plots
+    fig,ax = plt.subplot_mosaic([['x', 'y','a', 'xy', 'xy','xy','xy'], ['vx', 'vy','w', 'xy', 'xy', 'xy','xy']])
     fig.suptitle(TITLE)
     fig.set_size_inches(14,8)
 
@@ -101,12 +116,15 @@ def plot_pos_vel_xy(sol_d, tsol,  TITLE, shape=np.array([0,0]), animate = False,
 
     if sol_a is not None:
 
+        #plots all the analitical solutions
         ax['vy'].plot(tsol, sol_a[4,:],'-b',label = 'exact')
         ax['vx'].plot(tsol, sol_a[3,:],'-b',label = 'exact')
         ax['y'].plot(tsol, sol_a[1,:],'-b',label = 'exact')
         ax['x'].plot(tsol, sol_a[0,:],'-b',label = 'exact')
         ax['a'].plot(tsol, sol_a[2,:],'-b',label = 'exact')
         ax['w'].plot(tsol, sol_a[5,:],'-b',label = 'exact')
+        ax['xy'].plot(sol_a[0,:], sol_a[1,:] , 'c',label = 'exact')
+
 
 
 
@@ -115,12 +133,11 @@ def plot_pos_vel_xy(sol_d, tsol,  TITLE, shape=np.array([0,0]), animate = False,
     #plotting the movement on the xy plane
     ax['xy'].grid(True)
     ax['xy'].set_aspect('equal', adjustable='box')
-    ax['xy'].plot(sol_d.y[0,0],  sol_d.y[1,0] , 'oy', label = "start")  
+    ax['xy'].plot(sol_d.y[0,0],  sol_d.y[1,0] , 'oy', label = "start")          #plotting start position
     ax['xy'].plot(sol_d.y[0,:], sol_d.y[1,:] , '+g', label = 'RK')
     ax['xy'].plot(0,0,  'or')  #marking origin
     ax['xy'].set_xlabel("x[m]")
     ax['xy'].set_ylabel("y[m]")
-    ax['xy'].plot(sol_a[0,:], sol_a[1,:] , 'c',label = 'exact')
 
     ax['xy'].legend()
     ax['xy'].set_title("POSITION in XY PLANE")
@@ -128,49 +145,64 @@ def plot_pos_vel_xy(sol_d, tsol,  TITLE, shape=np.array([0,0]), animate = False,
     
     # print(max(sol_d.y[0,:]), max(sol_d.y[1,:]))
 
-    if max(sol_d.y[0,:])< 0.1:
+    #adjusting axis size if it is too small
+    if max(sol_d.y[0,:])< 0.1: 
         ax['xy'].set_xlim(-1,1)
 
-    if abs(max(sol_d.y[1,:]))< 0.1:
+    if abs(max(sol_d.y[1,:]))< 0.1: 
         ax['xy'].set_ylim(-1,1)
 
 
-    def update_animation_graph(frame):
+    def update_animation_graph(frame): 
+
+        """
+        function that updates each frame of the live graph
+        """
+
+
         # print(shape)
         # print(sol_d.y[:2,frame])
 
-        Rot = rotation_matrix2D(sol_d.y[2,frame])
-        # print(Rot)
 
+        #rotation matrix for the given rotation angle
+        Rot = rotation_matrix2D(sol_d.y[2,frame])
+
+        #calculates the coordinates of the points of the body, shifting them according to barycenter positon after applying rotation
         shape_shifted = Rot@shape + sol_d.y[:2,frame, np.newaxis]
 
-
+        #updates the body points data on the graph 
         polygon.set_xdata(shape_shifted[0])
         polygon.set_ydata(shape_shifted[1])
 
+        #moves the barycenter too
         barycenter.set_xdata(sol_d.y[0,frame])   #marks barycenter
         barycenter.set_ydata(sol_d.y[1,frame])
 
-        for g in graphs.keys():
+        #moves the current data value indicator in the vs time graph
+        for g in graphs.keys(): 
             t_graphs[g].set_xdata( tsol[frame])
             t_graphs[g].set_ydata( sol_d.y[graphs[g],frame])
 
-
-        L.get_texts()[3].set_text(f"T={round(frame*dt, 2) } s") 
+        #writes the current animation time
+        L.get_texts()[-1].set_text(f"T={round(frame*dt, 2) } s") 
 
         return (polygon, L, t_graphs)
 
 
     if animate:
         
+        #plots the starting shape
         Rot = rotation_matrix2D(sol_d.y[2,0])
         # print(Rot)
 
+        #initializes plot
         shape_shifted = Rot@shape + sol_d.y[:2,0, np.newaxis]
         polygon = ax['xy'].plot(shape_shifted[0], shape_shifted[1], 'o-b', label= 'T=0 s')[0]
         barycenter = ax['xy'].plot(sol_d.y[0,0],  sol_d.y[1,0], 'og')[0]
 
         t_graphs = {}
+
+        #plots the vs time graph and stores them
         for g in graphs.keys():
 
             t_graphs[g] = ax[g].plot(tsol[0], sol_d.y[graphs[g],0],'og', label = 'now')[0]
@@ -179,13 +211,19 @@ def plot_pos_vel_xy(sol_d, tsol,  TITLE, shape=np.array([0,0]), animate = False,
 
 
         L = ax['xy'].legend()
-    ax['x'].legend( )
+    ax['x'].legend()
 
+    #generates animation
     ani = animation.FuncAnimation(fig=fig, func=update_animation_graph, frames=(int(T/dt)+1), interval=dt*1000/time_ratio) 
 
     fig.tight_layout()
     fig.set_size_inches(14, 8)
   
+    if save_img:
+        fig.savefig(get_incremental_filename('data\\plots', 'AG_traiettoria', 'png'), dpi = 200)
+    
+    if save_vid:
+        ani.save(get_incremental_filename('data\\plots', 'AG_traiettoria', 'mp4'), writer='ffmpeg')
 
     plt.show()
 
