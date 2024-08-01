@@ -44,7 +44,7 @@ def draw_polygon(plot, shape, rotation_angle, position):
 
 
 
-def plot_pos_vel_xy(sol_d, tsol,  TITLE, shape=np.array([0,0]), animate = False, sol_a=None, T=5, dt=1/10, time_ratio = 1, save_img = True, save_vid = False ):
+def plot_pos_vel_xy(  sol_d, tsol,  TITLE, shape=np.array([0,0]), forces_ = [], animate = False, sol_a=None, T=5, dt=1/10, time_ratio = 1, save_img = True, save_vid = False ):
 
     """PLOTS X, Y POSITION, X,Y VELOCITY against time
     and position in XY plane
@@ -183,10 +183,14 @@ def plot_pos_vel_xy(sol_d, tsol,  TITLE, shape=np.array([0,0]), animate = False,
             t_graphs[g].set_xdata( tsol[frame])
             t_graphs[g].set_ydata( sol_d.y[graphs[g],frame])
 
+
+        for n, fg in enumerate(forces_rep):
+            forces[n].plot(fg,sol_d.y[:,frame])
+            
         #writes the current animation time
         L.get_texts()[-1].set_text(f"T={round(frame*dt, 2) } s") 
 
-        return (polygon, L, t_graphs)
+        return (polygon, L, t_graphs, forces_rep)
 
 
     if animate:
@@ -200,8 +204,18 @@ def plot_pos_vel_xy(sol_d, tsol,  TITLE, shape=np.array([0,0]), animate = False,
         polygon = ax['xy'].plot(shape_shifted[0], shape_shifted[1], 'o-b', label= 'T=0 s')[0]
         barycenter = ax['xy'].plot(sol_d.y[0,0],  sol_d.y[1,0], 'og')[0]
 
-        t_graphs = {}
+        forces_rep = []
+        forces = []
 
+        for f in forces_:
+
+            if f.plottable:
+                forces_rep.append(ax['xy'].quiver(f.attachment1[0], f.attachment1[1], 0, 0, color=f.color,  angles='xy', scale_units='xy', scale=1, width = 0.003))
+                forces.append(f)
+
+        print(forces_rep, 'a')
+
+        t_graphs = {}
         #plots the vs time graph and stores them
         for g in graphs.keys():
 

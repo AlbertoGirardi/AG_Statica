@@ -105,4 +105,4 @@ class Universe:
             the time ratio sets the ratio between simulation time and real time
             """
         lib.GUI.plot_pos_vel_xy(self.dynamic_solution, self.tsol,  titolo, shape=self.bodylist[0].shape,
-                                 sol_a=self.sol_a, animate=do_animation, T=self.T, dt= self.dt, time_ratio=time_ratio)
+                                 sol_a=self.sol_a, forces_=self.bodylist[0].forces , animate=do_animation, T=self.T, dt= self.dt, time_ratio=time_ratio)

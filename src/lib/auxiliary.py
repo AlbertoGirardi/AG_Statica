@@ -60,11 +60,11 @@ def ForceTorque(f, r, alfa):
 
 
    
-def coord_transform_loc_to_abs(local_coord, local_origin, angle):
+def coord_transform_loc_to_abs(local_coord, local_origin_abs, angle):
 
     """
     Transforms a local coordinate into absolute frame of reference
-    local_origin: origin of the local system 2d vector
+    local_origin: origin of the local system 2d vector, in abs coordinates
     angle: orientatio of the local system
     
     """
@@ -73,7 +73,7 @@ def coord_transform_loc_to_abs(local_coord, local_origin, angle):
 
     s = Rot@local_coord
 
-    return local_coord + local_origin
+    return s + local_origin_abs
 
 
 
@@ -84,7 +84,7 @@ def coord_local_to_abs_u(loc_c, u):
    u: state vector
    """
    
-   return coord_transform_loc_to_abs(local_coord=loc_c, local_origin=u[:2], angle=u[2])
+   return coord_transform_loc_to_abs(local_coord=loc_c, local_origin_abs=u[:2], angle=u[2])
 
 
 
@@ -124,19 +124,23 @@ def velocity_transform_loc_to_abs(v_orgin, alpha,  omega, sigma):
 
 
 
+
 class Force():
 
-  """GENERIC CLASS FOR A FORCE
+    """GENERIC CLASS FOR A FORCE
   implements api with __call__
   to get the force value simply the force object is called
   do not use directly"""
     
-  def __call__(self, body, t, u):
-    return self.calculateForce(body, t, u)
+    plottable = False
+    color = 'b'
+
+    def __call__(self, body, t, u):
+        return self.calculateForce(body, t, u)
   
-  def calculateForce(self):
-    #just placeholder
-    raise NotImplementedError("This class should never be used directly")
+    def calculateForce(self):
+        #just placeholder
+        raise NotImplementedError("This class should never be used directly")
 
 
 
@@ -227,6 +231,9 @@ class Spring(Force):
       self.L0 = l0
       self.attachment1 = abs_attachment
       self.attachmentBody = local_attachment
+      self.plottable = True
+      self.color = 'y'
+
     #   print(self.attachment1)
     #   print(self.L0)
 
@@ -235,7 +242,7 @@ class Spring(Force):
 
         #RETURNS FORCE VECTOR OF THE SPRING
 
-        d = coord_local_to_abs_u(self.attachmentBody ,u)  - self.attachment1                       #vector that rapresents spring direction
+        d = coord_local_to_abs_u(self.attachmentBody, u)  - self.attachment1                       #vector that rapresents spring direction
         # print(u[:2])
         L = np.linalg.norm(d)                               #lenght of the spring
 
@@ -255,6 +262,12 @@ class Spring(Force):
         # print(F, np.linalg.norm(F) - dL*self.k )   #test that is correct
         return ForceTorque(F, self.attachmentBody, u[2])
        
+    def plot(self, q, u):
+
+        attachment2 = coord_local_to_abs_u(self.attachmentBody, u)
+
+        q.set_UVC( attachment2[0], attachment2[1])
+
 
 
 
@@ -278,6 +291,9 @@ class Dampner(Force):
         self.b  = b
         self.attachment1 = abs_attachment
         self.attachmentBody = local_attachment   
+        self.plottable = True
+        self.color = 'r'
+
 
 
     def calculateForce(self, body, t, u):
@@ -305,6 +321,13 @@ class Dampner(Force):
         F = - d_ * f                    #calculate force vector 
         
         return ForceTorque(F, self.attachmentBody, u[2])
+    
+
+    def plot(self, q, u):
+
+        attachment2 = coord_local_to_abs_u(self.attachmentBody, u)
+
+        q.set_UVC( attachment2[0], attachment2[1])
 
 
 
