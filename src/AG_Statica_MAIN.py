@@ -5,9 +5,7 @@
 
 import lib.AGS_corpi
 import numpy as np
-import matplotlib.pyplot as plt
 import lib.universe 
-import math
 
 from lib.auxiliary import *
 from lib.examples import *

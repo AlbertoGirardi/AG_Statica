@@ -1,5 +1,4 @@
 import numpy as np
-from . import GUI
 from .auxiliary import *
 
 

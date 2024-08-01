@@ -4,6 +4,7 @@ import lib.universe
 import math
 
 from lib.auxiliary import *
+from lib.forces import *
 
 
 ###LIST OF DIFFERENT EXAMPLE CASES OF USE OF THE PROGRAM
@@ -87,8 +88,8 @@ def CorpoMolla():
     universo = lib.universe.Universe((mass,), gravity_a=g)
 
     aggancio = np.array([0,0])
-    # aggancio2 = np.array([0,2/3])               #due punti per vedere il diverso comportamento
-    aggancio2 = np.array([-1,-1/3])
+    aggancio2 = np.array([0,2/3])               #due punti per vedere il diverso comportamento
+    # aggancio2 = np.array([-1,-1/3])
     aggancio3 = np.array([+1,-1/3])
 
 

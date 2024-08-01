@@ -23,7 +23,7 @@ physics solver -> list of positions and rotation angles -> list of shape matrixe
 
 ## physics solving
 
-univers --> __call__ function that returns the force in that moment on the body
+universe --> __call__ function that returns the force in that moment on the body
 physics solver implemented in the universe, runs over all bodies and generates a list of state vectors
 state vectors passed to gui for plotting.
 
