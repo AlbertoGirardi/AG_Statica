@@ -120,7 +120,7 @@ class Spring(Force):
 
         #RETURNS FORCE VECTOR OF THE SPRING
 
-        d = coord_local_to_abs_u(self.attachmentBody, u)  - self.attachment1                       #vector that rapresents spring direction
+        d = coord_transform_local_to_abs_u(self.attachmentBody, u)  - self.attachment1                       #vector that rapresents spring direction
         # print(u[:2])
         L = np.linalg.norm(d)                               #lenght of the spring
 
@@ -130,7 +130,7 @@ class Spring(Force):
 
         dL = ( L - self.L0 )                                #spring contraction/extension
 
-
+        print(dL)
         # print(L)
         d_ = d/abs(L)                                       #versor of spring force
 
@@ -142,7 +142,7 @@ class Spring(Force):
        
     def plot(self, q, u):
 
-        attachment2 = coord_local_to_abs_u(self.attachmentBody, u)
+        attachment2 = coord_transform_local_to_abs_u(self.attachmentBody, u) - self.attachment1
 
         q.set_UVC( attachment2[0], attachment2[1])
 
@@ -178,7 +178,7 @@ class Dampner(Force):
 
         #returns the dampner force in vector form
 
-        d = coord_local_to_abs_u(self.attachmentBody ,u)  - self.attachment1           #vector rapresenting dampner
+        d = coord_transform_local_to_abs_u(self.attachmentBody ,u)  - self.attachment1           #vector rapresenting dampner
 
         v = velocity_transform_loc_to_abs(u[3:5], u[2], u[5], self.attachmentBody)         #velocity of body attachment point respect to dampner attachment  
 
@@ -203,7 +203,7 @@ class Dampner(Force):
 
     def plot(self, q, u):
 
-        attachment2 = coord_local_to_abs_u(self.attachmentBody, u)
+        attachment2 = coord_transform_local_to_abs_u(self.attachmentBody, u)
 
         q.set_UVC( attachment2[0], attachment2[1])
 

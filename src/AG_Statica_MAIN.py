@@ -15,9 +15,10 @@ from lib.examples import *
 def MAIN():
     #funzione main con il corpo del programma
 
-    print("AG Statica")
+    print("AG Statica\n\n")
 
     CorpoMolla()
+    # CorpoRotanteCaduta()
 
 
 
