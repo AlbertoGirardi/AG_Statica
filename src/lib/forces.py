@@ -130,7 +130,7 @@ class Spring(Force):
 
         dL = ( L - self.L0 )                                #spring contraction/extension
 
-        print(dL)
+        # print(dL)
         # print(L)
         d_ = d/abs(L)                                       #versor of spring force
 
