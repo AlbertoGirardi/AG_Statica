@@ -36,13 +36,15 @@ class Universe:
 
 
         self.Mass_matrix = np.diag(M_m_diag)
-        print(self.Mass_matrix)
+        # print(self.Mass_matrix)
 
         if self.n_bodies != 1:
             raise RuntimeError("only one body system")
         
         b1 = self.bodylist[0]
         self.u0 = np.concatenate((b1.position,[b1.rotation_angle], b1.velocity, [b1.angular_velocity]))
+
+        print(f"Initialized Universe with {self.n_bodies} bodies, \nstarting state: {self.u0}\n")
 
         # print(self.u0)
         # print(self.u0[3:5])
@@ -62,7 +64,11 @@ class Universe:
         self.dt   = dt
         self.T    = T
 
+        print("SOLVING ODE...")
+
         self.dynamic_solution = solve_ivp(self, [0, self.T], self.u0 , method='RK45', t_eval=self.tsol)
+
+        print("DONE!\n\n")
 
 
 
@@ -105,4 +111,4 @@ class Universe:
             the time ratio sets the ratio between simulation time and real time
             """
         lib.GUI.plot_pos_vel_xy(self.dynamic_solution, self.tsol,  titolo, shape=self.bodylist[0].shape,
-                                 sol_a=self.sol_a, animate=do_animation, T=self.T, dt= self.dt, time_ratio=time_ratio)
+                                 sol_a=self.sol_a, forces_=self.bodylist[0].forces , animate=do_animation, T=self.T, dt= self.dt, time_ratio=time_ratio, save_vid=False)

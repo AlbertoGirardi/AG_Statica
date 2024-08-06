@@ -44,7 +44,7 @@ def draw_polygon(plot, shape, rotation_angle, position):
 
 
 
-def plot_pos_vel_xy(sol_d, tsol,  TITLE, shape=np.array([0,0]), animate = False, sol_a=None, T=5, dt=1/10, time_ratio = 1, save_img = True, save_vid = False ):
+def plot_pos_vel_xy(  sol_d, tsol,  TITLE, shape=np.array([0,0]), forces_ = [], animate = False, sol_a=None, T=5, dt=1/10, time_ratio = 1, save_img = True, save_vid = False ):
 
     """PLOTS X, Y POSITION, X,Y VELOCITY against time
     and position in XY plane
@@ -74,9 +74,11 @@ def plot_pos_vel_xy(sol_d, tsol,  TITLE, shape=np.array([0,0]), animate = False,
     #x position
 
     ax['x'].plot(sol_d.t, sol_d.y[0,:],'+r',label = 'RK45')
-    
     ax['x'].set_xlabel("t [s]")
     ax['x'].set_ylabel("x [m]")
+    ax['x'].grid(True)
+
+    
     # ax['x'].set_title("position x")
         
     #y position
@@ -84,6 +86,8 @@ def plot_pos_vel_xy(sol_d, tsol,  TITLE, shape=np.array([0,0]), animate = False,
     ax['y'].plot(sol_d.t, sol_d.y[1,:],'+r',label = 'RK45')
     ax['y'].set_xlabel("t [s]")
     ax['y'].set_ylabel("y [m]")
+    ax['y'].grid(True)
+
     # ax['y'].set_title("position y")
 
 
@@ -92,6 +96,8 @@ def plot_pos_vel_xy(sol_d, tsol,  TITLE, shape=np.array([0,0]), animate = False,
     ax['vx'].plot(sol_d.t, sol_d.y[3,:],'+r',label = 'RK45')
     ax['vx'].set_xlabel("t [s]")
     ax['vx'].set_ylabel("vx [m/s]")
+    ax['vx'].grid(True)
+
     # ax['vx'].set_title("velocity x")
 
 
@@ -99,17 +105,23 @@ def plot_pos_vel_xy(sol_d, tsol,  TITLE, shape=np.array([0,0]), animate = False,
     ax['vy'].plot(sol_d.t, sol_d.y[4,:],'+r',label = 'RK45')
     ax['vy'].set_xlabel("t [s]")
     ax['vy'].set_ylabel("vy [m/s]")
+    ax['vy'].grid(True)
+
     # ax['vy'].set_title("velocity y")
 
     #angle
     ax['a'].plot(sol_d.t, sol_d.y[2,:],'+r',label = 'RK45')
     ax['a'].set_xlabel("t [s]")
     ax['a'].set_ylabel("phi [rad]")
+    ax['a'].grid(True)
+
 
     #angular velocity
     ax['w'].plot(sol_d.t, sol_d.y[5,:],'+r',label = 'RK45')
     ax['w'].set_xlabel("t [s]")
     ax['w'].set_ylabel("omega [rad]")
+    ax['w'].grid(True)
+
 
 
 
@@ -146,11 +158,12 @@ def plot_pos_vel_xy(sol_d, tsol,  TITLE, shape=np.array([0,0]), animate = False,
     # print(max(sol_d.y[0,:]), max(sol_d.y[1,:]))
 
     #adjusting axis size if it is too small
-    if max(sol_d.y[0,:])< 0.1: 
-        ax['xy'].set_xlim(-1,1)
+    s=2
+    if abs(max(sol_d.y[0,:]))< 0.1: 
+        ax['xy'].set_xlim(-s,s)
 
     if abs(max(sol_d.y[1,:]))< 0.1: 
-        ax['xy'].set_ylim(-1,1)
+        ax['xy'].set_ylim(-s,s)
 
 
     def update_animation_graph(frame): 
@@ -183,10 +196,14 @@ def plot_pos_vel_xy(sol_d, tsol,  TITLE, shape=np.array([0,0]), animate = False,
             t_graphs[g].set_xdata( tsol[frame])
             t_graphs[g].set_ydata( sol_d.y[graphs[g],frame])
 
+
+        for n, fg in enumerate(forces_rep):
+            forces[n].plot(fg,sol_d.y[:,frame])
+            
         #writes the current animation time
         L.get_texts()[-1].set_text(f"T={round(frame*dt, 2) } s") 
 
-        return (polygon, L, t_graphs)
+        return (polygon, L, t_graphs, forces_rep)
 
 
     if animate:
@@ -200,8 +217,19 @@ def plot_pos_vel_xy(sol_d, tsol,  TITLE, shape=np.array([0,0]), animate = False,
         polygon = ax['xy'].plot(shape_shifted[0], shape_shifted[1], 'o-b', label= 'T=0 s')[0]
         barycenter = ax['xy'].plot(sol_d.y[0,0],  sol_d.y[1,0], 'og')[0]
 
-        t_graphs = {}
+        forces_rep = []
+        forces = []
 
+        for f in forces_:
+
+            if f.plottable:
+                forces_rep.append(ax['xy'].quiver(f.attachment1[0], f.attachment1[1], 0, 0, color=f.color,  angles='uv', scale_units='xy', scale=1, width = 0.005))
+                forces.append(f)
+
+        # print(forces_rep, 'a')
+
+
+        t_graphs = {}
         #plots the vs time graph and stores them
         for g in graphs.keys():
 

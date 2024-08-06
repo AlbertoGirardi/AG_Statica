@@ -105,6 +105,8 @@ ci sono anche forze non attive
 mega matrice con le masse e momenti di inerzia
 
 
+
+
 vincolo cerniera  
 hr -> vettore delle forze reattive, per cerniera f in x, y e momento    
 
@@ -129,3 +131,42 @@ equazione sulla cinematica del corpo (come prima)
 equazione del vincolo
 
 -> q due punti accelerazioni totali -> trasformarlo nel vettore flusso
+
+
+
+
+PENDOLO FISICO
+
+
+
+multy body
+
+- stessa posizione
+- stessa velocità (forma con le matrici)
+
+matrice a blocchi per 
+
+
+accelerazione: scomponiamo tra parti di velocità e accelerazione
+
+
+
+SISTEMA DUE EQUAZIONI
+
+F= m*a
+accelerazione vincoli = 0
+
+necessario risolvere problema
+
+
+equazione in lambda che dipende solo dalle forze e dalle velocità
+
+
+integrazione 
+
+1. avere vettore di stato
+2. calcolare le reazioni vincolari lambda
+3. inserire lambda nelle equazioni e calcolare accelerazioni
+
+
+con body reference difficile avere più precisione   

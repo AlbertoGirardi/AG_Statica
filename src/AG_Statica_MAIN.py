@@ -5,9 +5,7 @@
 
 import lib.AGS_corpi
 import numpy as np
-import matplotlib.pyplot as plt
 import lib.universe 
-import math
 
 from lib.auxiliary import *
 from lib.examples import *
@@ -17,9 +15,10 @@ from lib.examples import *
 def MAIN():
     #funzione main con il corpo del programma
 
-    print("AG Statica")
+    print("AG Statica\n\n")
 
     CorpoMolla()
+    # CorpoRotanteCaduta()
 
 
 

@@ -20,10 +20,21 @@ animation with matplotlib animate
 physics solver -> list of positions and rotation angles -> list of shape matrixes (rotated and shifted) -> used to plot the moving shapes
 
 
+force: means force+torque
+
 
 ## physics solving
 
-univers --> __call__ function that returns the force in that moment on the body
+BODIES: each has a list of active forces imposed -> returns net resulting force on itself, due to active forces
+
+UNIVERSE: collection of bodies. Gathers the total resulting force on each body, stiches all them  up in a big force vector
+        then calculates the acceleration using the inertia matrix
+        handles constraints
+
+        
+
+
+universe --> __call__ function that returns the force in that moment on the body
 physics solver implemented in the universe, runs over all bodies and generates a list of state vectors
 state vectors passed to gui for plotting.
 

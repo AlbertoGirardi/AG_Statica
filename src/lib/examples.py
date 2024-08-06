@@ -4,6 +4,7 @@ import lib.universe
 import math
 
 from lib.auxiliary import *
+from lib.forces import *
 
 
 ###LIST OF DIFFERENT EXAMPLE CASES OF USE OF THE PROGRAM
@@ -22,10 +23,16 @@ def CorpoRotanteCaduta():
 
     forma = np.array([[1,0,-1,1], [0,1,0,0]])  + np.array([0,-1/3])[:,np.newaxis]      #forma spostata rispetto al baricentro
 
-    w = np.pi*2/1.5 *0
+    w = np.pi*2/1*0
     a = np.pi/2 *0
 
-    M = 0
+
+    
+    f = np.array([0,1])
+    b = np.array([1,0])
+
+
+    M = np.linalg.norm(f) * np.linalg.norm(b)*2
 
     inertia = 0.4
     e = M/inertia
@@ -35,14 +42,15 @@ def CorpoRotanteCaduta():
     mass = lib.AGS_corpi.Rigido(mass=3,inertia=inertia, position=posizione, velocity=velocity, shape=forma, rotation_angle=a, angular_velocity=w )
     # print(mass.u0)
 
-
     universo = lib.universe.Universe((mass,), gravity_a=g)
 
 
-    mass.addForce([ForceGravity(), ConstantForce(np.array([0,1]), np.array([-1,0]))])
+    mass.addForce([ForceGravity(), ConstantForce(f,b), ConstantForce(-f,-b)])
 
-    T=3
-    dt = 1/24
+
+
+    T=0.1
+    dt = 1/240
 
     universo.solve(T, dt)
 
@@ -57,9 +65,16 @@ def CorpoRotanteCaduta():
 
 
 def CorpoMolla():
+
+    barycenter = np.array([0,-1/3])[:,np.newaxis]
+
+    a = np.pi/2
+
+    R = rotation_matrix2D(a+np.pi/2)
+    p0 = R@np.array([10+1/3,0])
     
-    x0 = 14
-    y0 = -14
+    x0 = p0[0]
+    y0 = p0[1]
     vx0 = 0
     vy0 = 0
 
@@ -68,16 +83,15 @@ def CorpoMolla():
     posizione = np.array([x0,y0])
     velocity = np.array([vx0,vy0])
 
-    forma = np.array([[1,0,-1,1], [0,1,0,0]])   + np.array([0,-1/3])[:,np.newaxis]      #forma spostata rispetto al baricentro
 
-    w = np.pi*2/1.5 *0.0
-    a = np.pi/2 *0
+    forma = np.array([[1,0,-1,1], [0,1,0,0]])    +  barycenter    #forma spostata rispetto al baricentro
+
+    w = np.pi*2/1.5 *0
 
 
     inertia = 5 
     
 
-    k = 3
 
     #definizione oggetto corpo
     mass = lib.AGS_corpi.Rigido(mass=3,inertia=inertia, position=posizione, velocity=velocity, shape=forma, rotation_angle=a, angular_velocity=w )
@@ -87,21 +101,30 @@ def CorpoMolla():
     universo = lib.universe.Universe((mass,), gravity_a=g)
 
     aggancio = np.array([0,0])
-    aggancio2 = np.array([0,2/3])               #due punti per vedere il diverso comportamento
-    # aggancio2 = np.array([-1,-1/3])
+    c = np.array([0,1])
+    c = R@c
+    aggancio1 = np.array([0,2/3])               #due punti per vedere il diverso comportamento
+    aggancio2 = np.array([-1,-1/3])
     aggancio3 = np.array([+1,-1/3])
 
 
-    
+    k = 5
+    l = 10
 
-    molla = Spring(k, 14.1, aggancio, aggancio2)
-    smorzatore = Dampner(2, aggancio, aggancio2 )
-    smorzatore1 = Dampner(2, aggancio, aggancio3 )
+    molla = Spring(k, l, aggancio+c, aggancio2)
+    molla2 = Spring(k, l, aggancio-c, aggancio3)
+
+    b=2
+
+    smorzatore = Dampner(b, aggancio, aggancio1 )
+    smorzatore1 = Dampner(b, aggancio, aggancio3 )
 
 
-    mass.addForce([molla, smorzatore, smorzatore1, ForceGravity()])
+    # mass.addForce([molla, molla2, smorzatore,  ForceGravity()])
+    mass.addForce([molla, molla2 ])
 
-    T=  20
+
+    T=  3
     dt = 1/10
 
     universo.solve(T, dt)
