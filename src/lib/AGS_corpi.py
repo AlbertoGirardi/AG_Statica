@@ -1,4 +1,5 @@
 import numpy as np
+from numpy.core.multiarray import array as array, zeros as zeros
 from .auxiliary import *
 
 
@@ -9,7 +10,7 @@ from .auxiliary import *
 
 class Rigido():
 
-    def __init__(self, mass, inertia, position, rotation_angle=0 , velocity=np.zeros(2), angular_velocity=0 , shape= np.array([[1,0,-1,1], [0,1,0,0]]) ):
+    def __init__(self, mass, inertia, position=np.zeros(2), rotation_angle=0 , velocity=np.zeros(2), angular_velocity=0 , shape= np.array([[1,0,-1,1], [0,1,0,0]]) ):
 
         """
         CLASS FOR A GENERAL BODY IN 2 DIMENSIONS,
@@ -33,7 +34,9 @@ class Rigido():
         # print(self.u0)
         self.forces = []
 
-        self.universe = None    #univers of which the body is part, used for comunicating general parameters 
+        self.universe = None    #universe of which the body is part, used for comunicating general parameters 
+        self.isLab = False      #is the body the fixed frame of the laboratory?   
+
 
        
 
@@ -42,7 +45,8 @@ class Rigido():
 
     def addForce(self, force_list):
 
-        """adds a list of given forces to the list of total forces"""
+        """adds a list of given forces to the list of total forces
+        must be done after having attached the body to a universe"""
         self.forces.extend(force_list)
 
 
@@ -66,6 +70,18 @@ class Rigido():
 
 
 
+
+class Lab(Rigido):
+
+    def __init__(self):
+        super().__init__(mass=100, inertia=100)
+        self.isLab = True
+
+    def addForce(self, force_list):
+        raise RuntimeError("No force can be applied to the fixed frame of the laboratory!")
+    
+    def Force(self, t, u):
+        return np.zeros(3)
 
 
 

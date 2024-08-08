@@ -5,7 +5,7 @@ tutor prof. Fucile Fabio
 Progetto PCTO, ITST J.F. Kennedy, 3^ A MP
 
 
-Programma per risoluzione di strutture statiche sottoposte a carichi noti.
+Programma per risoluzione di sistemi dinamici formati da corpi vincolati e sottoposti a sollecitazioni esterne
 In sviluppo
 
 

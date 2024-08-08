@@ -36,17 +36,30 @@ class Universe:
 
 
         self.Mass_matrix = np.diag(M_m_diag)
-        # print(self.Mass_matrix)
+        print(self.Mass_matrix)
 
-        if self.n_bodies != 1:
-            raise RuntimeError("only one body system")
+        if self.n_bodies > 2:
+            raise RuntimeError("only one or two body system!")
         
-        b1 = self.bodylist[0]
-        self.u0 = np.concatenate((b1.position,[b1.rotation_angle], b1.velocity, [b1.angular_velocity]))
+        
+
+        u0_ = []
+
+        # STATE VECTOR [x1,y1,phi1,vx1,vy1, omega1, xn,yn,phin,vxn,vyn, omegan, ...] 
+
+        for n,b in enumerate(self.bodylist):
+            u0_.extend((b.position,[b.rotation_angle], b.velocity, [b.angular_velocity]))
+
+            if b.isLab and n != 0:
+                raise RuntimeError("the laboratory must be the first body provided!")
+
+        # print(u0_)
+
+        self.u0 = np.concatenate(u0_)               #buildis starting state vector
 
         print(f"Initialized Universe with {self.n_bodies} bodies, \nstarting state: {self.u0}\n")
 
-        # print(self.u0)
+        print(self.u0)
         # print(self.u0[3:5])
 
 
@@ -75,26 +88,41 @@ class Universe:
     def __call__(self, t, u): 
         
         
-        """dato il vettore di stato u [x,y,phi,vx,vy, omega] e il tempo restituisce il vettore FLUSSO[vx, vy, omega, ax, ay, epsilon], calcolando l'accelerazione subita
+        """dato il vettore di stato u [x1,y1,phi1,vx1,vy1, omega1, xn,yn,phin,vxn,vyn, omegan, ...] 
+        e il tempo restituisce il vettore FLUSSO[vx1, vy1, omega1, ax1, ay1, epsilon1,vxn, vyn, omegan, axn, ayn, epsilonn, ... ]
+
+        dove n è il numero del corpo
+        calcolando l'accelerazione subita
             
         necessary for solving the system with the scipy api
 
         """
 
-        x, y, a, vx, vy, w = u                        #spacchettamento vettore di stato
+
+        q = np.concatenate([u[(6*n):(6*n+3)] for n in range(self.n_bodies)])              
+
+        dq = np.concatenate([u[(6*n+3):(6*n+6)] for n in range(self.n_bodies)])
 
 
-        dx   = vx                                 #dummy
-        dy   = vy
-        dphi = w
+        FORCES = np.concatenate([b.Force(t,u) for b in self.bodylist])
 
-        accelerations = self.bodylist[0].Force(t, u) / np.diag(self.Mass_matrix)        #CALCULATES ACCELERATIONS FROM TOTAL FORCE AND MASS-INERTIA MATRIX
 
-        dvx = accelerations[0]                                                          #gets accelerations in the various dimensions
-        dvy = accelerations[1]
-        dw  = accelerations[2]
 
-        return [dx, dy, dphi, dvx, dvy, dw]                                              #ritorna il vettore FLUSSO
+        accelerations = FORCES / np.diag(self.Mass_matrix)        #CALCULATES ACCELERATIONS FROM TOTAL FORCE AND MASS-INERTIA MATRIX 
+        #!TODO add vincoli
+
+
+
+        #builds the state vector given velocities and accelerations
+        flusso_ = []
+
+        for n in range(self.n_bodies):
+            #iterates through all bodies and adds to the state vector the velocities and accelerations of each
+            flusso_.extend((dq[3*n:3*n+3], accelerations[3*n:3*n+3] ))
+
+        FLUSSO = np.concatenate(flusso_) 
+
+        return FLUSSO                                             #ritorna il vettore FLUSSO
 
 
         
@@ -110,5 +138,5 @@ class Universe:
 
             the time ratio sets the ratio between simulation time and real time
             """
-        lib.GUI.plot_pos_vel_xy(self.dynamic_solution, self.tsol,  titolo, shape=self.bodylist[0].shape,
-                                 sol_a=self.sol_a, forces_=self.bodylist[0].forces , animate=do_animation, T=self.T, dt= self.dt, time_ratio=time_ratio, save_vid=False)
+        lib.GUI.plot_pos_vel_xy(self.dynamic_solution, self.tsol,  titolo, shape=self.bodylist[1].shape,
+                                 sol_a=self.sol_a, forces_=self.bodylist[1].forces , animate=do_animation, T=self.T, dt= self.dt, time_ratio=time_ratio, save_vid=False)

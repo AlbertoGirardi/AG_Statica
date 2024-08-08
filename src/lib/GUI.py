@@ -64,6 +64,9 @@ def plot_pos_vel_xy(  sol_d, tsol,  TITLE, shape=np.array([0,0]), forces_ = [], 
 
     """
 
+    sol_d.y = sol_d.y[6:, :]                #soluzione temporanea per il plotting
+    print(shape)
+
     #create graph with multiple plots
     fig,ax = plt.subplot_mosaic([['x', 'y','a', 'xy', 'xy','xy','xy'], ['vx', 'vy','w', 'xy', 'xy', 'xy','xy']])
     fig.suptitle(TITLE)
@@ -210,10 +213,12 @@ def plot_pos_vel_xy(  sol_d, tsol,  TITLE, shape=np.array([0,0]), forces_ = [], 
         
         #plots the starting shape
         Rot = rotation_matrix2D(sol_d.y[2,0])
+
         # print(Rot)
 
         #initializes plot
         shape_shifted = Rot@shape + sol_d.y[:2,0, np.newaxis]
+        # print(shape_shifted)
         polygon = ax['xy'].plot(shape_shifted[0], shape_shifted[1], 'o-b', label= 'T=0 s')[0]
         barycenter = ax['xy'].plot(sol_d.y[0,0],  sol_d.y[1,0], 'og')[0]
 
