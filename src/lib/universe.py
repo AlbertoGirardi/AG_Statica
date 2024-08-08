@@ -21,6 +21,9 @@ class Universe:
 
         self.bodylist = bodylist
         self.n_bodies = len(self.bodylist)              #numero di corpi
+
+        self.vincoli = []
+
         self.sol_a = None                               #exact solution of the system
 
         self.T = 0     #placeholder for total time
@@ -29,14 +32,21 @@ class Universe:
         self.g = gravity_a     #diagonal values of the mass-inertia matrix for the universe
 
         M_m_diag = []
+        masking_m = []
 
         for b in self.bodylist:             #tells every body the universe gravity
             b.universe = self
             M_m_diag.extend([b.mass, b.mass, b.inertia])
+            masking_m.extend([int(not b.isLab)]*3)
 
 
-        self.Mass_matrix = np.diag(M_m_diag)
+        self.Mass_matrix = np.diag(M_m_diag)            #creates the mass-inertia matrix
+
+        self.fixed_frame_masking = np.diag(masking_m)   #creates masking matrix to fix in place the laboratory body, if present
+
+
         print(self.Mass_matrix)
+        print(self.fixed_frame_masking)
 
         if self.n_bodies > 2:
             raise RuntimeError("only one or two body system!")
@@ -63,6 +73,10 @@ class Universe:
         # print(self.u0[3:5])
 
 
+    def addVincoli(self, vincoli):
+
+
+        self.vincoli.extend(vincoli)
 
 
     def solve(self, T, dt): 
@@ -87,7 +101,6 @@ class Universe:
 
     def __call__(self, t, u): 
         
-        
         """dato il vettore di stato u [x1,y1,phi1,vx1,vy1, omega1, xn,yn,phin,vxn,vyn, omegan, ...] 
         e il tempo restituisce il vettore FLUSSO[vx1, vy1, omega1, ax1, ay1, epsilon1,vxn, vyn, omegan, axn, ayn, epsilonn, ... ]
 
@@ -109,9 +122,10 @@ class Universe:
 
 
         accelerations = FORCES / np.diag(self.Mass_matrix)        #CALCULATES ACCELERATIONS FROM TOTAL FORCE AND MASS-INERTIA MATRIX 
+        accelerations = self.fixed_frame_masking@accelerations      #applies masking to make laboratory fixed in place  
         #!TODO add vincoli
 
-
+        print(self.vincoli[0].Jacobian(u))
 
         #builds the state vector given velocities and accelerations
         flusso_ = []

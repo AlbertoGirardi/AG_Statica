@@ -166,7 +166,8 @@ def plot_pos_vel_xy(  sol_d, tsol,  TITLE, shape=np.array([0,0]), forces_ = [], 
         ax['xy'].set_xlim(-s,s)
 
     if abs(max(sol_d.y[1,:]))< 0.1: 
-        ax['xy'].set_ylim(-s,s)
+        pass
+        # ax['xy'].set_ylim(-s,s)
 
 
     def update_animation_graph(frame): 

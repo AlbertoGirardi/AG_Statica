@@ -8,6 +8,10 @@ import matplotlib.pyplot as plt
 
 rotmT = np.array([[0, -1], [1,0]])          #rotation matrix for perpendicular vector
 
+#useful matrixes
+IdentityMtx = np.diag([1,1])
+NullMtx = np.diag([0,0])
+
 
 def rotation_matrix2D(alfa):
 
@@ -102,6 +106,7 @@ def coord_transform_local_to_abs_u(loc_c, u):
    Transforms a local coordinate into absolute frame of reference
    u: state vector
    """
+   #! REDO FOR MULTIPLE BODIES!
    return coord_transform_loc_to_abs(local_coord=loc_c, local_origin_abs=u[:2], angle=u[2])
 
 

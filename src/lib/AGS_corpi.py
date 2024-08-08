@@ -1,5 +1,4 @@
 import numpy as np
-from numpy.core.multiarray import array as array, zeros as zeros
 from .auxiliary import *
 
 

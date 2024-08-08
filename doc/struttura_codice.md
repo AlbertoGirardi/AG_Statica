@@ -44,3 +44,18 @@ STATE VECTOR  [x,y,vx,vy]  for mass points
 STATE VECTOR  [x,y,phi, vx,vy, omega]  for rigid bodies
 
 
+
+vincoli:
+classe che definisce vincolo tra due corpi, indicando i due corpi
+l'oggetto vincolo viene passato all'universo, che gestisce i vincoli successivamente
+
+
+
+
+masking matrix:
+
+the acceleration resulting from the sum of the constraints and the active forces are multiplied to it. This matrix makes possible to null out the acceleration of bodies that must remain fixed in place, such as the laboratory, the fixed frame for the whole system.
+
+It is very similar to the identity matrix, but with the first three cells nulled out if that is the laboratory
+
+
