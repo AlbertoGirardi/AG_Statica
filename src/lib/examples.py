@@ -68,13 +68,12 @@ def CorpoMolla():
 
     barycenter = np.array([0,-1/3])[:,np.newaxis]
 
-    a = np.pi/2
+    a = 0
 
     R = rotation_matrix2D(a+np.pi/2)
-    p0 = R@np.array([10+1/3,0])
     
-    x0 = p0[0]
-    y0 = p0[1]
+    x0 = 8
+    y0 = -5
     vx0 = 0
     vy0 = 0
 
@@ -89,7 +88,7 @@ def CorpoMolla():
     w = np.pi*2/1.5 *0
 
 
-    inertia = 5 
+    inertia = 10 
     
 
 
@@ -100,9 +99,8 @@ def CorpoMolla():
 
     universo = lib.universe.Universe((mass,), gravity_a=g)
 
-    aggancio = np.array([0,0])
-    c = np.array([0,1])
-    c = R@c
+    aggancio = np.array([5,0])
+
     aggancio1 = np.array([0,2/3])               #due punti per vedere il diverso comportamento
     aggancio2 = np.array([-1,-1/3])
     aggancio3 = np.array([+1,-1/3])
@@ -111,20 +109,20 @@ def CorpoMolla():
     k = 5
     l = 10
 
-    molla = Spring(k, l, aggancio+c, aggancio2)
-    molla2 = Spring(k, l, aggancio-c, aggancio3)
+    molla = Spring(k, l, aggancio, aggancio2)
+    molla2 = Spring(k, l, aggancio, aggancio2)
 
     b=2
 
-    smorzatore = Dampner(b, aggancio, aggancio1 )
+    smorzatore = Dampner(b, aggancio, aggancio2 )
     smorzatore1 = Dampner(b, aggancio, aggancio3 )
 
 
     # mass.addForce([molla, molla2, smorzatore,  ForceGravity()])
-    mass.addForce([molla, molla2 ])
+    mass.addForce([molla, molla2, ForceGravity(), smorzatore ])
 
 
-    T=  3
+    T=  15
     dt = 1/10
 
     universo.solve(T, dt)

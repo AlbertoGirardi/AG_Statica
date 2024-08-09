@@ -223,7 +223,7 @@ def plot_pos_vel_xy(  sol_d, tsol,  TITLE, shape=np.array([0,0]), forces_ = [], 
         for f in forces_:
 
             if f.plottable:
-                forces_rep.append(ax['xy'].quiver(f.attachment1[0], f.attachment1[1], 0, 0, color=f.color,  angles='uv', scale_units='xy', scale=1, width = 0.005))
+                forces_rep.append(ax['xy'].quiver(f.attachment1[0], f.attachment1[1], 0, 0, color=f.color,  angles='xy', scale_units='xy', scale=1, width = 0.005))
                 forces.append(f)
 
         # print(forces_rep, 'a')

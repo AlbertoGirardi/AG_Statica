@@ -203,7 +203,7 @@ class Dampner(Force):
 
     def plot(self, q, u):
 
-        attachment2 = coord_transform_local_to_abs_u(self.attachmentBody, u)
+        attachment2 = coord_transform_local_to_abs_u(self.attachmentBody, u) - self.attachment1
 
         q.set_UVC( attachment2[0], attachment2[1])
 
