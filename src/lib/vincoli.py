@@ -23,10 +23,10 @@ class Cerniera():
         #determining fictitious parameters using rule of thumb
 
         self.f_damp = 1             #damping
-        self.f_mass = 100000*max([b.mass for b in self.bodies])                  #fictitious mass
+        self.f_mass = 10000*max([b.mass for b in self.bodies])                  #fictitious mass
 
-        self.f_T = 0.01                                                      #fictitious natural period
-        self.f_w = np.pi*2/self.f_T
+        self.f_T = 0.005                                                      #fictitious natural period
+        self.f_w = round(np.pi*2/self.f_T,1)
 
         print(self.f_w, self.f_damp, self.f_mass)
 
@@ -38,7 +38,7 @@ class Cerniera():
 
         for n, sigma in enumerate(self.attachments):
 
-            s.append(coord_transform_loc_to_abs(sigma, np.zeros(2), u[n+2]))            #from local non rotated to local rotated
+            s.append(coord_transform_loc_to_abs(sigma, np.zeros(2), u[6*n+2]))            #from local non rotated to local rotated
 
         # print(s)
 

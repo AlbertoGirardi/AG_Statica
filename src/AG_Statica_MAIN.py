@@ -24,7 +24,7 @@ def MAIN():
     # return 0
 
 
-    x0 = 1
+    x0 = 2
     y0 = 1/3
     vx0 = 0
     vy0 = 0
@@ -40,7 +40,7 @@ def MAIN():
 
 
     M = 0
-    inertia = 100
+    inertia = 50
     e = M/inertia
 
 
@@ -49,7 +49,7 @@ def MAIN():
     lab = lib.AGS_corpi.Lab()
 
     aggancio2 = np.array([-1,-1/3])
-    cerniera = Cerniera((lab, mass), (np.zeros(2), aggancio2))
+    cerniera = Cerniera((lab, mass), (np.array([1,0]), aggancio2))
     # print(mass.u0)
 
     universo = lib.universe.Universe((lab, mass,), gravity_a=g)
@@ -57,14 +57,17 @@ def MAIN():
 
     mass.addForce([ForceGravity()])
 
-    universo.solve(2,0.01)
+    universo.solve(2,0.005)
 
     # tsol = universo.tsol
     # universo.sol_a = MRUA(tsol, x0 , y0, vx0, vy0, 0, g, a,  w, e )
 
-    # print(universo.dynamic_solution.y)
+    print('a',universo.dynamic_solution.y[:,-1], '\n\nz')
 
     universo.draw("test", do_animation=True)
+
+
+    
 
 
 
