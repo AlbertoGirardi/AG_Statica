@@ -73,7 +73,7 @@ class Rigido():
 class Lab(Rigido):
 
     def __init__(self):
-        super().__init__(mass=100, inertia=100)
+        super().__init__(mass=10, inertia=10)
         self.isLab = True
 
     def addForce(self, force_list):

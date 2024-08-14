@@ -153,6 +153,10 @@ def velocity_transform_loc_to_abs(v_orgin, alpha,  omega, sigma, debug=False):
 
 
 
+def velocity_transform_loc_to_abs_u(u, sigma, debug=False):
+
+    return velocity_transform_loc_to_abs(v_orgin=u[:2], alpha=u[2], omega=u[5], sigma=sigma)
+
 
 
 

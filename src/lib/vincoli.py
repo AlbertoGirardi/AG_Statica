@@ -23,9 +23,9 @@ class Cerniera():
         #determining fictitious parameters using rule of thumb
 
         self.f_damp = 1             #damping
-        self.f_mass = 1000*max([b.mass for b in self.bodies])                  #fictitious mass
+        self.f_mass = 100000*max([b.mass for b in self.bodies])                  #fictitious mass
 
-        self.f_T = 0.3                                                      #fictitious natural period
+        self.f_T = 0.01                                                      #fictitious natural period
         self.f_w = np.pi*2/self.f_T
 
         print(self.f_w, self.f_damp, self.f_mass)
@@ -38,18 +38,53 @@ class Cerniera():
 
         for n, sigma in enumerate(self.attachments):
 
-            s.append(coord_transform_loc_to_abs(sigma, np.zeros(2), u[n+2]))
+            s.append(coord_transform_loc_to_abs(sigma, np.zeros(2), u[n+2]))            #from local non rotated to local rotated
 
-        print(s)
+        # print(s)
 
 
         J = np.array(  [[ 1, 0, -s[0][1], -1, 0, +s[1][1]],              
                         [ 0, 1, +s[0][0], 0, -1, -s[1][0]]]
         )
 
-        print(J)
+        # print(J)
 
         return J
+    
+
+    def dJacobian(self, u):
+
+        sP = [None, None]
+
+        for n, b in enumerate(self.bodies):
+
+            sP[n] = rotmT @ velocity_transform_loc_to_abs(np.zeros(2), u[n*6+2],omega=u[n*6+5], sigma=self.attachments[n])
+            #calculates the vector perpendicular to the velocity of the attachment point
+
+
+        # print(sP)
+
+        dJ = np.column_stack((NullMtx, sP[0], -NullMtx, -sP[1]))
+
+        # print(dJ)
+        return dJ
+    
+
+    def g(self, u):
+
+        g = coord_transform_local_to_abs_u(self.attachments[0], u[:6]) - coord_transform_local_to_abs_u(self.attachments[1], u[6:])
+
+
+        return g
+    
+    def dg(self, u):
+
+        dg = velocity_transform_loc_to_abs_u(u[:6], self.attachments[0]) - velocity_transform_loc_to_abs_u(u[6:], self.attachments[1])
+
+
+        return dg
+
+        
 
 
         

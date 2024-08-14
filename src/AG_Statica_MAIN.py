@@ -24,8 +24,8 @@ def MAIN():
     # return 0
 
 
-    x0 = 5
-    y0 = 0
+    x0 = 1
+    y0 = 1/3
     vx0 = 0
     vy0 = 0
     g= -9.81
@@ -40,12 +40,12 @@ def MAIN():
 
 
     M = 0
-    inertia = 0.4
+    inertia = 100
     e = M/inertia
 
 
     #definizione oggetto corpo
-    mass = lib.AGS_corpi.Rigido(mass=3,inertia=inertia, position=posizione, velocity=velocity, shape=forma, rotation_angle=a, angular_velocity=w )
+    mass = lib.AGS_corpi.Rigido(mass=30,inertia=inertia, position=posizione, velocity=velocity, shape=forma, rotation_angle=a, angular_velocity=w )
     lab = lib.AGS_corpi.Lab()
 
     aggancio2 = np.array([-1,-1/3])
@@ -57,10 +57,10 @@ def MAIN():
 
     mass.addForce([ForceGravity()])
 
-    universo.solve(2,0.1)
+    universo.solve(2,0.01)
 
-    tsol = universo.tsol
-    universo.sol_a = MRUA(tsol, x0 , y0, vx0, vy0, 0, g, a,  w, e )
+    # tsol = universo.tsol
+    # universo.sol_a = MRUA(tsol, x0 , y0, vx0, vy0, 0, g, a,  w, e )
 
     # print(universo.dynamic_solution.y)
 

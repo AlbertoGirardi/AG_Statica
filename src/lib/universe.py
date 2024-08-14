@@ -120,12 +120,28 @@ class Universe:
         FORCES = np.concatenate([b.Force(t,u) for b in self.bodylist])
 
 
+     #CALCULATES ACCELERATIONS FROM TOTAL FORCE AND MASS-INERTIA MATRIX 
 
-        accelerations = FORCES / np.diag(self.Mass_matrix)        #CALCULATES ACCELERATIONS FROM TOTAL FORCE AND MASS-INERTIA MATRIX 
+        v = self.vincoli[0]
+
+        J = v.Jacobian(u)
+        dJ = v.dJacobian(u)
+
+        dg = v.dg(u)
+        g_ = v.g(u)
+
+
+        accelerations = np.linalg.inv( self.Mass_matrix+ v.f_mass*(J.T@J)) @ (FORCES - (v.f_mass*J.T@(dJ@dq + 2*v.f_damp* v.f_w* dg + (v.f_w**2)*g_)) )   
+
         accelerations = self.fixed_frame_masking@accelerations      #applies masking to make laboratory fixed in place  
         #!TODO add vincoli
 
-        print(self.vincoli[0].Jacobian(u))
+        # print(J, J.T)
+
+        # print((v.f_mass*(J.T@J)).shape)
+        # print(self.Mass_matrix.shape)
+
+        # print(accelerations.shape)
 
         #builds the state vector given velocities and accelerations
         flusso_ = []
