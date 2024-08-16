@@ -57,7 +57,7 @@ def MAIN():
 
     mass.addForce([ForceGravity()])
 
-    universo.solve(2,0.005)
+    universo.solve(4,0.01)
 
     # tsol = universo.tsol
     # universo.sol_a = MRUA(tsol, x0 , y0, vx0, vy0, 0, g, a,  w, e )

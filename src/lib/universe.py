@@ -134,13 +134,10 @@ class Universe:
         accelerations = np.linalg.inv( self.Mass_matrix+ v.f_mass*(J.T@J)) @ (FORCES - (v.f_mass*J.T@(dJ@dq + 2*v.f_damp* v.f_w* dg + (v.f_w**2)*g_)) )   
 
         accelerations = self.fixed_frame_masking@accelerations      #applies masking to make laboratory fixed in place  
-        #!TODO add vincoli
 
         # print(J, J.T)
-
         # print((v.f_mass*(J.T@J)).shape)
         # print(self.Mass_matrix.shape)
-
         # print(accelerations.shape)
 
         #builds the state vector given velocities and accelerations
