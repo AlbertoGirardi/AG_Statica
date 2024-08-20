@@ -45,8 +45,8 @@ class Universe:
         self.fixed_frame_masking = np.diag(masking_m)   #creates masking matrix to fix in place the laboratory body, if present
 
 
-        print(self.Mass_matrix)
-        print(self.fixed_frame_masking)
+        print('Inertia:\n',self.Mass_matrix)
+        print('Masking:\n',self.fixed_frame_masking)
 
         if self.n_bodies > 2:
             raise RuntimeError("only one or two body system!")
@@ -129,7 +129,8 @@ class Universe:
 
         dg = v.dg(u)
         g_ = v.g(u)
-
+        # print(dJ)
+        # print(g_, dg)
 
         accelerations = np.linalg.inv( self.Mass_matrix+ v.f_mass*(J.T@J)) @ (FORCES - (v.f_mass*J.T@(dJ@dq + 2*v.f_damp* v.f_w* dg + (v.f_w**2)*g_)) )   
 

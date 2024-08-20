@@ -25,10 +25,10 @@ class Cerniera():
         self.f_damp = 1             #damping
         self.f_mass = 10000*max([b.mass for b in self.bodies])                  #fictitious mass
 
-        self.f_T = 0.005                                                      #fictitious natural period
+        self.f_T = 0.001                                                      #fictitious natural period
         self.f_w = round(np.pi*2/self.f_T,1)
 
-        print(self.f_w, self.f_damp, self.f_mass)
+        print( f"omega: {self.f_w}, damp: {self.f_damp}, mass: {self.f_mass}"  )
 
 
 
@@ -74,14 +74,12 @@ class Cerniera():
 
         g = coord_transform_local_to_abs_u(self.attachments[0], u[:6]) - coord_transform_local_to_abs_u(self.attachments[1], u[6:])
 
-
         return g
-    
+
+
     def dg(self, u):
 
         dg = velocity_transform_loc_to_abs_u(u[:6], self.attachments[0]) - velocity_transform_loc_to_abs_u(u[6:], self.attachments[1])
-
-
         return dg
 
         
