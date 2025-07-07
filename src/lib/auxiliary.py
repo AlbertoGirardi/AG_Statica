@@ -2,6 +2,8 @@ import numpy as np
 import os
 
 import matplotlib.pyplot as plt
+from scipy.special import ellipj
+
 
 
 #(- self.k / (np.linalg.norm(u[:2])**2)) *(u[:2])     #1D GRAVITY LAW
@@ -179,6 +181,39 @@ def get_incremental_filename(base_dir, base_name, ext):
         if not os.path.exists(filepath):
             return filepath
         i += 1
+
+
+
+def pendulum_exact_solution(m,g,l,J, tsol):
+
+    g=-g
+    w = np.sqrt(m*g*l/J)
+    t = tsol
+
+    theta_max = np.pi/180*90# °1 deg
+
+
+    theta_lin  = theta_max*np.sin(w*t) # linear angle
+    dtheta_lin = w*theta_max*np.cos(w*t) # linear angular velocity
+
+    k = np.sin(theta_max/2)
+    sncndnph = ellipj(w*t,k) #output sn cn dn ph
+    sn = sncndnph[0]; # sine amplitude
+    cn = sncndnph[1]; # cosine amplitude
+
+    theta_nonlin  = 2*np.arcsin(k*sn) # nonlinear angle
+    dtheta_nonlin = 2*k*w*cn # nonlinear angular velocity
+
+    wsol = dtheta_nonlin
+    asol = theta_nonlin
+
+    s0 = 0*tsol
+
+
+    return np.vstack((s0, s0, asol, s0, s0, wsol))
+
+    
+
 
 
 

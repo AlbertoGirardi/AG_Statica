@@ -59,3 +59,9 @@ the acceleration resulting from the sum of the constraints and the active forces
 It is very similar to the identity matrix, but with the first three cells nulled out if that is the laboratory
 
 
+
+## PROJECT DATA MANAGEMENT
+
+A 'Project' contains all the information for a physical setup, and is saved in a folder inside the data folder. It can be read and reloaded from that. Inside each project folder there is a 'system' folder containing the pickle file describing the system, and an 'output' folder with all the state vector and the final plot image
+
+

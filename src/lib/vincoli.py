@@ -19,20 +19,29 @@ class Cerniera():
         self.bodies = bodies
         self.attachments =  attachments
 
+        self.dl = 0.01
+
 
         #determining fictitious parameters using rule of thumb
 
         self.f_damp = 1             #damping
-        self.f_mass = 10000*max([b.mass for b in self.bodies])                  #fictitious mass
+        # self.f_mass = 1000*max([b.mass for b in self.bodies])                  #fictitious mass
 
-        self.f_T = 0.001                                                      #fictitious natural period
-        self.f_w = round(np.pi*2/self.f_T,1)
-
-        print( f"omega: {self.f_w}, damp: {self.f_damp}, mass: {self.f_mass}"  )
-
+        #fictitious spring constant (depends on maximum allowed displacement from perfect placement)
+        #!TODO massa corpo 
+        self.f_k = 50*9.81/self.dl 
 
 
-    def Jacobian(self, u):
+        self.f_T = 0.01                                                 #fictitious natural period
+        self.f_w = np.pi*2/self.f_T
+
+        self.f_mass = self.f_k/(self.f_w**2)
+
+        print( f"omega: {self.f_w}, damp: {self.f_damp}, mass: {self.f_mass}, k {self.f_k}" )
+
+
+
+    def Jacobian(self, u):      
 
         s = []
 
