@@ -158,7 +158,7 @@ class Universe:
 
 
 
-    def draw(self, titolo, do_animation=False,  time_ratio = 1):
+    def draw(self, titolo, do_animation=False,  time_ratio = 1, save_path='data\\plots'):
 
         """draws the (for now) single body of the universe, using matplotlib
 
@@ -167,4 +167,4 @@ class Universe:
             the time ratio sets the ratio between simulation time and real time
             """
         lib.GUI.plot_pos_vel_xy(self.dynamic_solution, self.tsol,  titolo, shape=self.bodylist[1].shape,
-                                 sol_a=self.sol_a, forces_=self.bodylist[1].forces , animate=do_animation, T=self.T, dt= self.dt, time_ratio=time_ratio, save_vid=False)
+                                 sol_a=self.sol_a, forces_=self.bodylist[1].forces , animate=do_animation, T=self.T, dt= self.dt, time_ratio=time_ratio, save_vid=False, save_path=save_path)

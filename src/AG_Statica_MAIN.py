@@ -10,15 +10,12 @@ import lib.universe
 from lib.auxiliary import *
 from lib.examples import *
 from lib.vincoli import *
+from lib.project_data_management import *
 
 
 
-def MAIN():
-    #funzione main con il corpo del programma
 
-    print("AG Statica\n\n")
-
-
+def create_project():
     a_ = (np.pi/2)* (1-1/18)
 
     # a = 2*np.pi-a_
@@ -72,15 +69,35 @@ def MAIN():
 
     mass.addForce([ForceGravity()])
 
-    universo.solve(3,0.005)
+
+    p = Project('triangolo_pendolo')
+    p.link_Universe(universo)
+
+    
+    return p
+
+
+
+def MAIN():
+    #funzione main con il corpo del programma
+
+    print("AG Statica\n\n")
+
+
+   
+    # progetto = create_project()
+
+    progetto = Project('triangolo_pendolo')
+    progetto.load()
+
+    progetto.solve(4, 0.01)
 
     # tsol = universo.tsol
     # universo.sol_a = pendulum_exact_solution(m, g, l, inertia, tsol)
     # universo.sol_a = MRUA(tsol, x0 , y0, vx0, vy0, 0, g, a,  w, e )
     # print(universo.sol_a)
-    # print('a',universo.dynamic_solution.y[:,-1], '\n\nz')
+    print(progetto.universo.dynamic_solution.y[0,:], '\n\nz')
 
-    universo.draw("test", do_animation=True)
 
 
     
