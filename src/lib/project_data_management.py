@@ -1,37 +1,54 @@
 import os
+import pickle
+import copy
 
 
 
 class Project():
 
-    def __init__(self, name, universo):
+    def __init__(self, name):
         self.name = name
-        self.universo = universo
+        
 
         #create folder structure
-        base_path = os.path.join(os.getcwd(),'\\data', self.name)
-        output_path = os.path.join(base_path, 'output', 'plots')
-        system_path = os.path.join(base_path, 'system')
+        base_path = os.path.join('data', self.name)
+        self.output_path = os.path.join(base_path, 'output')
+        self.plots_path = os.path.join(base_path, 'output', 'plots')
+        self.system_path = os.path.join(base_path, 'system')
 
         # Create directories
-        os.makedirs(output_path, exist_ok=True)
-        os.makedirs(system_path, exist_ok=True)
+        os.makedirs(base_path, exist_ok=True)
+        os.makedirs(self.output_path, exist_ok=True)
+        os.makedirs(self.plots_path, exist_ok=True)
 
+        os.makedirs(self.system_path, exist_ok=True)
 
+    def link_Universe(self, universo):
+        """links an universe object to the universe"""
+        self.universo = universo
+                      
     def save(self):
         """Saves by pickling the initial state of the universe and all of its bodies before running the simulation"""
-        pass
+        with open(os.path.join(self.system_path, 'system.pkl'), 'wb') as f:
+            pickle.dump(copy.deepcopy(self.universo), f)
         
 
     def solve(self, T, dT):
         self.save()
         self.universo.solve(T, dT)
+        self.universo.draw("test", do_animation=True, save_path=self.plots_path )
 
-    def save_sim(self):
-        pass
+
+
+        
 
     def load(self):
-        pass
+        
+        try:
+            with open(os.path.join(self.system_path, 'system.pkl'), 'rb') as f:
+                self.universo = pickle.load(f)
 
+        except FileNotFoundError:
+            print("Errore: progetto non ritrovato!!!")
 
     

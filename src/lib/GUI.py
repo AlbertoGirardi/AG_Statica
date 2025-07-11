@@ -44,7 +44,7 @@ def draw_polygon(plot, shape, rotation_angle, position):
 
 
 
-def plot_pos_vel_xy(  sol_d, tsol,  TITLE, shape=np.array([0,0]), forces_ = [], animate = False, sol_a=None, T=5, dt=1/10, time_ratio = 1, save_img = True, save_vid = False ):
+def plot_pos_vel_xy(  sol_d, tsol,  TITLE, shape=np.array([0,0]), forces_ = [], animate = False, sol_a=None, T=5, dt=1/10, time_ratio = 1, save_img = True, save_vid = False , save_path='data\\plots'):
 
     """PLOTS X, Y POSITION, X,Y VELOCITY against time
     and position in XY plane
@@ -254,10 +254,10 @@ def plot_pos_vel_xy(  sol_d, tsol,  TITLE, shape=np.array([0,0]), forces_ = [], 
     fig.set_size_inches(14, 8)
   
     if save_img:
-        fig.savefig(get_incremental_filename('data\\plots', 'AG_traiettoria', 'png'), dpi = 200)
+        fig.savefig(get_incremental_filename(save_path, 'AG_traiettoria', 'png'), dpi = 200)
     
     if save_vid:
-        ani.save(get_incremental_filename('data\\plots', 'AG_traiettoria', 'mp4'), writer='ffmpeg')
+        ani.save(get_incremental_filename(save_path, 'AG_traiettoria', 'mp4'), writer='ffmpeg')
 
     plt.show()
 
