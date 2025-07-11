@@ -15,11 +15,14 @@ from lib.project_data_management import *
 
 
 
-def create_project():
-    a_ = (np.pi/2)* (1-1/18)
 
-    # a = 2*np.pi-a_
-    a=0
+
+
+
+def create_project():
+    a_ = np.pi*0.05
+
+    a = 1.5*np.pi-(a_/2)
 
     h = 0.4
     l = 1
@@ -85,10 +88,10 @@ def MAIN():
 
 
    
-    # progetto = create_project()
+    progetto = create_project()
 
-    progetto = Project('triangolo_pendolo')
-    progetto.load()
+    # progetto = Project('triangolo_pendolo')
+    # progetto.load()
 
     progetto.solve(4, 0.01)
 

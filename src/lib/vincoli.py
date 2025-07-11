@@ -32,7 +32,7 @@ class Cerniera():
         self.f_k = 50*9.81/self.dl 
 
 
-        self.f_T = 1                                                 #fictitious natural period
+        self.f_T = 0.01                                                #fictitious natural period
         self.f_w = np.pi*2/self.f_T
 
         self.f_mass = self.f_k/(self.f_w**2)
