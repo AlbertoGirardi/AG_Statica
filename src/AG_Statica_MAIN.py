@@ -97,10 +97,10 @@ def MAIN():
 
 
    
-    progetto = create_project()
+    # progetto = create_project()
 
-    # progetto = Project('triangolo_pendolo')
-    # progetto.load()
+    progetto = Project('triangolo_pendolo')
+    progetto.load()
 
     progetto.solve(1, 0.01)
 
@@ -120,5 +120,6 @@ def MAIN():
 
 
 if __name__ == '__main__':              #entry guard, rende chiaro che sia da eseguire
-    MAIN()
+    # MAIN()
+    CorpoRotanteCaduta()
 

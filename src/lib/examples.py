@@ -14,9 +14,9 @@ def CorpoRotanteCaduta():
     #valori di partenza per il problema
     x0 = 0
     y0 = 0
-    vx0 = 0
-    vy0 = 0
-    g= 0
+    vx0 = 5
+    vy0 = 8
+    g= -9.81
 
     posizione = np.array([x0,y0])
     velocity = np.array([vx0,vy0])
@@ -28,28 +28,28 @@ def CorpoRotanteCaduta():
 
 
     
-    f = np.array([0,1])
-    b = np.array([1,0])
+    f = np.array([0,0])
+    b = np.array([0,0])
 
 
-    M = np.linalg.norm(f) * np.linalg.norm(b)*2
-
+    M = np.linalg.norm(f) * np.linalg.norm(b)*2 *0
     inertia = 0.4
-    e = M/inertia
+    e = 0
 
 
     #definizione oggetto corpo
     mass = lib.AGS_corpi.Rigido(mass=3,inertia=inertia, position=posizione, velocity=velocity, shape=forma, rotation_angle=a, angular_velocity=w )
     # print(mass.u0)
+    lab = lib.AGS_corpi.Lab()
 
-    universo = lib.universe.Universe((mass,), gravity_a=g)
+    universo = lib.universe.Universe((lab, mass,), gravity_a=g)
 
 
     mass.addForce([ForceGravity(), ConstantForce(f,b), ConstantForce(-f,-b)])
 
 
 
-    T=0.1
+    T=1
     dt = 1/240
 
     universo.solve(T, dt)
@@ -97,8 +97,9 @@ def CorpoMolla():
     mass = lib.AGS_corpi.Rigido(mass=3,inertia=inertia, position=posizione, velocity=velocity, shape=forma, rotation_angle=a, angular_velocity=w )
     # print(mass.u0)
 
+    lab = lib.AGS_corpi.Lab()
 
-    universo = lib.universe.Universe((mass,), gravity_a=g)
+    universo = lib.universe.Universe((lab, mass,), gravity_a=g)
 
     aggancio = np.array([0,0])
     c = np.array([0,1])
