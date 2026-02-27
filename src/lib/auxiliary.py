@@ -4,6 +4,7 @@ import os
 import matplotlib.pyplot as plt
 from scipy.special import ellipj
 
+from   scipy.integrate import solve_ivp
 
 
 #(- self.k / (np.linalg.norm(u[:2])**2)) *(u[:2])     #1D GRAVITY LAW
@@ -113,7 +114,7 @@ def coord_transform_local_to_abs_u(loc_c, u):
 
 
 
-def velocity_transform_loc_to_abs(v_orgin, alpha,  omega, sigma, debug=False):
+def velocity_transform_loc_to_abs(v_orgin, alpha,  omega, sigma=np.zeros(2), debug=False):
 
     """
     calculates the velocity of a point given its position in the local coords, the velocity and rotation, angular velocity of the body
@@ -184,35 +185,97 @@ def get_incremental_filename(base_dir, base_name, ext):
 
 
 
-def pendulum_exact_solution(m,g,l,J, tsol):
+def pendulum_exact_solution(m,g, dOG ,JO, tsol):
 
-    g=-g
-    w = np.sqrt(m*g*l/J)
-    t = tsol
+    class physic_pendulum:
+        def __init__(self,  omega):
+            self.omega = omega
+        
+        def __call__(self, t, u):
+            phi, dphi = u
+            ddphi = -self.omega**2 * np.sin(phi)
+            return [dphi, ddphi]
 
-    theta_max = np.pi/180*90# °1 deg
+    # condizioni iniziali
+    phi0  = np.pi/6 # angolo rispetto alla vericale
+    dphi0 = 0       # velocità di rotaziones
+
+    # modello matematico
+    # oggetto con polo fisso soggetto a gravità
+
+    # JO*ddphi + m*g*dOG*sin(phi) = 0
+    # JO momento d'inezia rispetto al punto di sospendita JO = JG + dOG^2*m
+    # m massa
+    # dOG distanza tra il centro di massa e la cerniera
+    # si può scrivere anche come
+    # ddphi = - (m*g*dOG/JO)*sin(phi)
+    # w^2   = (m*g*dOG/JO) frequenza naturale pendolo fisico
+
+    JO = 1 #kgm^2
+    g = 9.81 # m/s^2 
+    dOG = 1 # m lunghezza pendolo fisico fino al baricentro
+    m = 1 # kg massa pendolo fisico
+    omegac = np.sqrt(m*dOG*g/JO)
 
 
-    theta_lin  = theta_max*np.sin(w*t) # linear angle
-    dtheta_lin = w*theta_max*np.cos(w*t) # linear angular velocity
 
-    k = np.sin(theta_max/2)
-    sncndnph = ellipj(w*t,k) #output sn cn dn ph
-    sn = sncndnph[0]; # sine amplitude
-    cn = sncndnph[1]; # cosine amplitude
 
-    theta_nonlin  = 2*np.arcsin(k*sn) # nonlinear angle
-    dtheta_nonlin = 2*k*w*cn # nonlinear angular velocity
+    u0 = np.array([phi0,dphi0])
+    # metodo Runge Kutta predictor corrector 4/5 ordine
+    sol = solve_ivp(physic_pendulum(omega=omegac), [0, T], u0 , method='RK45', t_eval=tsol)
 
-    wsol = dtheta_nonlin
-    asol = theta_nonlin
 
     s0 = 0*tsol
 
-
     return np.vstack((s0, s0, asol, s0, s0, wsol))
 
-    
+
+def pendulum_linear_solution(m,g,phi0, dOG ,JO, tsol):
+
+    """
+    Calculates the 
+      JO: moment of inertia of the pendulum from the pivot point:  kgm^2
+      dOG: distance from the barycenter of the pendulum from the pivot: m
+      m: mass of the pendulum: kg
+      tsol: array of moments of time at which to calculate the solution
+      phi0: angle to the vertical
+    # """
+
+    # condizioni iniziali
+   
+    dphi0 = 0       # velocità di rotaziones
+
+    # modello matematico
+    # oggetto con polo fisso soggetto a gravità
+
+    # JO*ddphi + m*g*dOG*sin(phi) = 0
+    # JO momento d'inezia rispetto al punto di sospendita JO = JG + dOG^2*m
+    # m massa
+    # dOG distanza tra il centro di massa e la cerniera
+    # si può scrivere anche come
+    # ddphi = - (m*g*dOG/JO)*sin(phi)
+    # w^2   = (m*g*dOG/JO) frequenza naturale pendolo fisico
+
+
+    omegac = np.sqrt(m*dOG*g/JO)
+
+
+
+ 
+    asol =   phi0*np.cos(omegac*tsol) + dphi0/omegac*np.sin(omegac*tsol) + 3/2*np.pi
+    wsol = -omegac*phi0*np.sin(omegac*tsol) + dphi0*np.cos(omegac*tsol)
+
+    xsol = dOG * np.cos(asol)
+    ysol = dOG * np.sin(asol)
+
+    vsol = velocity_transform_loc_to_abs(v_orgin=dOG*wsol, alpha=asol, omega=wsol)
+    vxsol = vsol[0]
+    vysol = vsol[1]
+
+
+    return np.vstack((xsol, ysol, asol,vxsol, vysol, wsol))
+
+
 
 
 

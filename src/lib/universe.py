@@ -121,18 +121,26 @@ class Universe:
 
 
      #CALCULATES ACCELERATIONS FROM TOTAL FORCE AND MASS-INERTIA MATRIX 
+    
+        try:
+            v = self.vincoli[0]
 
-        v = self.vincoli[0]
+            J = v.Jacobian(u)
+            dJ = v.dJacobian(u)
 
-        J = v.Jacobian(u)
-        dJ = v.dJacobian(u)
+            dg = v.dg(u)
+            g_ = v.g(u)
+            # print(dJ)
+            # print(g_, dg)
+            accelerations = np.linalg.inv( self.Mass_matrix+ v.f_mass*(J.T@J)) @ (FORCES - (v.f_mass*J.T@(dJ@dq + 2*v.f_damp* v.f_w* dg + (v.f_w**2)*g_)) )
 
-        dg = v.dg(u)
-        g_ = v.g(u)
-        # print(dJ)
-        # print(g_, dg)
+        except :
+    
+            accelerations = np.linalg.inv( self.Mass_matrix) @ (FORCES ) 
+                                                                                  
 
-        accelerations = np.linalg.inv( self.Mass_matrix+ v.f_mass*(J.T@J)) @ (FORCES - (v.f_mass*J.T@(dJ@dq + 2*v.f_damp* v.f_w* dg + (v.f_w**2)*g_)) )   
+
+        
 
         accelerations = self.fixed_frame_masking@accelerations      #applies masking to make laboratory fixed in place  
 

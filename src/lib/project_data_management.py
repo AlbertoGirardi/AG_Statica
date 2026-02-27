@@ -1,6 +1,8 @@
 import os
 import pickle
 import copy
+import pandas as pd
+
 
 
 
@@ -31,14 +33,33 @@ class Project():
         """Saves by pickling the initial state of the universe and all of its bodies before running the simulation"""
         with open(os.path.join(self.system_path, 'system.pkl'), 'wb') as f:
             pickle.dump(copy.deepcopy(self.universo), f)
+
+
+
+
         
 
     def solve(self, T, dT):
         self.save()
         self.universo.solve(T, dT)
+
+
+
+        #saves output state vector at all moments in time
+
+
+        #the labels for the colums containing each data, repeated because there are two bodies
+        column_labels =  ['x', 'y','a','vx', 'vy','w',]*2 
+
+        output_data = pd.DataFrame( self.universo.dynamic_solution.y.T, columns=column_labels)
+        output_data.insert(0, 't', self.universo.dynamic_solution.t )
+
+        output_data.to_csv(os.path.join(self.output_path, 'state_vector.csv'), index =False)
+
+
+
+    def plot(self):
         self.universo.draw("test", do_animation=True, save_path=self.plots_path )
-
-
 
         
 

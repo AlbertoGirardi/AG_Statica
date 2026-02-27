@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
+import copy
 
 import os
 
@@ -44,7 +45,7 @@ def draw_polygon(plot, shape, rotation_angle, position):
 
 
 
-def plot_pos_vel_xy(  sol_d, tsol,  TITLE, shape=np.array([0,0]), forces_ = [], animate = False, sol_a=None, T=5, dt=1/10, time_ratio = 1, save_img = True, save_vid = False , save_path='data\\plots'):
+def plot_pos_vel_xy(  sol_d_, tsol,  TITLE, shape=np.array([0,0]), forces_ = [], animate = False, sol_a=None, T=5, dt=1/10, time_ratio = 1, save_img = True, save_vid = False , save_path='data\\plots'):
 
     """PLOTS X, Y POSITION, X,Y VELOCITY against time
     and position in XY plane
@@ -63,7 +64,7 @@ def plot_pos_vel_xy(  sol_d, tsol,  TITLE, shape=np.array([0,0]), forces_ = [], 
 
 
     """
-
+    sol_d = copy.deepcopy(sol_d_)
     sol_d.y = sol_d.y[6:, :]                #soluzione temporanea per il plotting
     print(shape)
 
