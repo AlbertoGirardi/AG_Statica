@@ -151,12 +151,12 @@ def velocity_transform_loc_to_abs(v_orgin, alpha,  omega, sigma=np.zeros(2), deb
         fig.savefig(get_incremental_filename('data\\plots', 'test_velocity_transform    ', 'png'), dpi = 200)
 
         plt.show()
-
+    # print('fatto')
     return v_a
 
 
 
-def velocity_transform_loc_to_abs_u(u, sigma, debug=False):
+def velocity_transform_loc_to_abs_u(u, sigma=np.zeros(2), debug=False):
 
     return velocity_transform_loc_to_abs(v_orgin=u[:2], alpha=u[2], omega=u[5], sigma=sigma)
 
@@ -268,10 +268,13 @@ def pendulum_linear_solution(m,g,phi0, dOG ,JO, tsol):
     xsol = dOG * np.cos(asol)
     ysol = dOG * np.sin(asol)
 
-    vsol = velocity_transform_loc_to_abs(v_orgin=dOG*wsol, alpha=asol, omega=wsol)
-    vxsol = vsol[0]
-    vysol = vsol[1]
+    vsol = [velocity_transform_loc_to_abs(v_orgin=dOG*wsol[n_], alpha=asol[n_], omega=wsol[n_]) for n_ in range(len(tsol))]
+    print(vsol[0])
+    vxsol = [sol[0] for sol in vsol]
+    vysol = [sol[1] for sol in vsol]
 
+    # vxsol = xsol*0
+    # vysol = xsol*0
 
     return np.vstack((xsol, ysol, asol,vxsol, vysol, wsol))
 

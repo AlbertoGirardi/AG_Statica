@@ -14,7 +14,7 @@ from lib.project_data_management import *
 
 
 #angolo del pendolo rispetto alla verticale
-a_ = np.pi/12
+a_ = np.pi/16
 
 a = 1.5*np.pi+(a_)
 
@@ -97,10 +97,10 @@ def MAIN():
 
 
    
-    # progetto = create_project()
+    progetto = create_project()
 
-    progetto = Project('triangolo_pendolo')
-    progetto.load()
+    # progetto = Project('triangolo_pendolo')
+    # progetto.load()
 
     progetto.solve(1, 0.01)
 
@@ -108,7 +108,6 @@ def MAIN():
     progetto.universo.sol_a = pendulum_linear_solution(m,-g, a_ ,dOG, inertiaO, tsol)
     progetto.plot()
 
-    # universo.sol_a = pendulum_exact_solution(m, g, l, inertia, tsol)
     # universo.sol_a = MRUA(tsol, x0 , y0, vx0, vy0, 0, g, a,  w, e )
     # print(universo.sol_a)
     # print('a',progetto.universo.dynamic_solution.y[:,0], '\n\nz')
@@ -120,6 +119,6 @@ def MAIN():
 
 
 if __name__ == '__main__':              #entry guard, rende chiaro che sia da eseguire
-    # MAIN()
-    CorpoRotanteCaduta()
+    MAIN()
+    # CorpoRotanteCaduta()
 
