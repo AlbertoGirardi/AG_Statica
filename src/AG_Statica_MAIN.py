@@ -13,6 +13,7 @@ from lib.vincoli import *
 from lib.project_data_management import *
 
 
+
 #angolo del pendolo rispetto alla verticale
 a_ = np.pi/16
 
@@ -82,7 +83,7 @@ def create_project():
 
     
 
-    p = Project('triangolo_pendolo')
+    p = Project('Pendolo semplice')
     p.link_Universe(universo)
 
     
@@ -106,11 +107,28 @@ def MAIN():
 
     tsol = progetto.universo.tsol
     progetto.universo.sol_a = pendulum_linear_solution(m,-g, a_ ,dOG, inertiaO, tsol)
-    progetto.plot()
+
+    a_error =round( RMSE(progetto.universo.sol_a[2,:], progetto.universo.dynamic_solution.y[8,:] )*100, 3)
+    x_error =round( RMSE(progetto.universo.sol_a[0,:], progetto.universo.dynamic_solution.y[6,:] )*100, 3)
+    y_error =round( RMSE(progetto.universo.sol_a[1,:], progetto.universo.dynamic_solution.y[7,:] )*100, 3)
+    w_error = round(RMSE(progetto.universo.sol_a[5,:], progetto.universo.dynamic_solution.y[11,:] )*100, 3)
+    vx_error =round( RMSE(progetto.universo.sol_a[3,:], progetto.universo.dynamic_solution.y[9,:] )*100, 3)
+    vy_error = round(RMSE(progetto.universo.sol_a[4,:], progetto.universo.dynamic_solution.y[10,:] )*100, 3)
+
+    print('Errors compared to exact solution\n')
+    print(f'RMS angle error: {a_error}%')
+    print(f'RMS x coord error: {x_error}%')
+    print(f'RMS y coord error: {y_error}%')
+    print(f'RMS angular velocity error: {w_error}%')
+    print(f'RMS x velocity error: {vx_error}%')
+    print(f'RMS y velocity error: {vy_error}%')
 
     # universo.sol_a = MRUA(tsol, x0 , y0, vx0, vy0, 0, g, a,  w, e )
     # print(universo.sol_a)
-    # print('a',progetto.universo.dynamic_solution.y[:,0], '\n\nz')
+    # print('sol 1',progetto.universo.dynamic_solution.y[8,0:10], '\n\nz')
+    # print('sol 2',progetto.universo.sol_a[2,0:10], '\n\nz')
+
+    progetto.plot()
 
 
 

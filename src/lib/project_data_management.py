@@ -59,7 +59,7 @@ class Project():
 
 
     def plot(self):
-        self.universo.draw("test", do_animation=True, save_path=self.plots_path )
+        self.universo.draw(self.name, do_animation=True, save_path=self.plots_path )
 
         
 

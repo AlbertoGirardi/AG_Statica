@@ -66,7 +66,7 @@ def plot_pos_vel_xy(  sol_d_, tsol,  TITLE, shape=np.array([0,0]), forces_ = [],
     """
     sol_d = copy.deepcopy(sol_d_)
     sol_d.y = sol_d.y[6:, :]                #soluzione temporanea per il plotting
-    print(shape)
+    # print(shape)
 
     #create graph with multiple plots
     fig,ax = plt.subplot_mosaic([['x', 'y','a', 'xy', 'xy','xy','xy'], ['vx', 'vy','w', 'xy', 'xy', 'xy','xy']])

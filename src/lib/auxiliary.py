@@ -226,8 +226,12 @@ def pendulum_exact_solution(m,g, dOG ,JO, tsol):
 
 
     s0 = 0*tsol
+    asol = s0
+    wsol = s0
 
     return np.vstack((s0, s0, asol, s0, s0, wsol))
+
+
 
 
 def pendulum_linear_solution(m,g,phi0, dOG ,JO, tsol):
@@ -278,17 +282,11 @@ def pendulum_linear_solution(m,g,phi0, dOG ,JO, tsol):
 
     return np.vstack((xsol, ysol, asol,vxsol, vysol, wsol))
 
+def RMSE(x,xsol):
+    N = np.size(x)
+    return np.sqrt(1/N*np.sum((x - xsol)**2))   
 
 
 
 
-
-if __name__ == '__main__':   
-   
-    #test code
-    # print(rotation_matrix2D(np.pi/2))
-
-
-    # print(velocity_transform_loc_to_abs(v_orgin=np.array([4,3]), alpha=np.pi/2, omega=2, sigma=np.array([1,1/2])))
-    print(coord_transform_loc_to_abs(np.array([1,0]), local_origin_abs=np.array([5,4]), angle=2 ,debug=True))
 
