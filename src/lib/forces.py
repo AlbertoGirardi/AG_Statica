@@ -116,12 +116,13 @@ class Spring(Force):
     #   print(self.L0)
 
 
-    def calculateForce(self, body, t, u):
+    def calculateForce(self, body, t, u_):
 
         #RETURNS FORCE VECTOR OF THE SPRING
-
+        u = u_[-6:]
+        # print(u)
         d = coord_transform_local_to_abs_u(self.attachmentBody, u)  - self.attachment1                       #vector that rapresents spring direction
-        # print(u[:2])
+        # print(u[-6:])
         L = np.linalg.norm(d)                               #lenght of the spring
 
         if L == 0:  
@@ -136,7 +137,7 @@ class Spring(Force):
 
         F = (- self.k * dL* d_)                             #HOOK LAW, returning vector force
 
-        # print(dL, F[0])
+        # print(, F[1])
         # print(F, np.linalg.norm(F) - dL*self.k )   #test that is correct
         return ForceTorque(F, self.attachmentBody, u[2])
        

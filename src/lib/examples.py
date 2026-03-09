@@ -68,15 +68,15 @@ def CorpoMolla():
 
     barycenter = np.array([0,-1/3])[:,np.newaxis]
 
-    a = np.pi/2
+    a = 0
 
     R = rotation_matrix2D(a+np.pi/2)
     p0 = R@np.array([10+1/3,0])
     
-    x0 = p0[0]
-    y0 = p0[1]
+    x0 = 0
+    y0 = -5
     vx0 = 0
-    vy0 = 0
+    vy0 = 1
 
     g = -9.81
 
@@ -86,7 +86,7 @@ def CorpoMolla():
 
     forma = np.array([[1,0,-1,1], [0,1,0,0]])    +  barycenter    #forma spostata rispetto al baricentro
 
-    w = np.pi*2/1.5 *0
+    w = 0
 
 
     inertia = 5 
@@ -99,44 +99,40 @@ def CorpoMolla():
 
     lab = lib.AGS_corpi.Lab()
 
-    universo = lib.universe.Universe((lab, mass,), gravity_a=g)
 
     aggancio = np.array([0,0])
-    c = np.array([0,1])
-    c = R@c
+    c = np.array([1,0])
+   
     aggancio1 = np.array([0,2/3])               #due punti per vedere il diverso comportamento
     aggancio2 = np.array([-1,-1/3])
     aggancio3 = np.array([+1,-1/3])
 
 
-    k = 5
-    l = 10
+    k = 10
+    l = 5+1/3
 
-    molla = Spring(k, l, aggancio+c, aggancio2)
-    molla2 = Spring(k, l, aggancio-c, aggancio3)
+    molla = Spring(k, l, aggancio-c, aggancio2)
+    molla2 = Spring(k, l, aggancio+c, aggancio3)
 
-    b=2
-
-    smorzatore = Dampner(b, aggancio, aggancio1 )
-    smorzatore1 = Dampner(b, aggancio, aggancio3 )
 
 
     # mass.addForce([molla, molla2, smorzatore,  ForceGravity()])
-    mass.addForce([molla, molla2 ])
+    mass.addForce([molla, molla2, ForceGravity() ])
 
+    universo = lib.universe.Universe((lab, mass,), gravity_a=g)
 
     T=  3
-    dt = 1/10
+    dt = 1/20
 
     universo.solve(T, dt)
 
-    tsol = universo.tsol
+    # tsol = universo.tsol
 
-    omegax = math.sqrt(k/mass.mass)
+    # omegax = math.sqrt(k/mass.mass)
 
-    xsol = x0*np.cos(omegax*tsol) + vx0/omegax*np.sin(omegax*tsol)           #soluzioni analitiche posizione x e y 
+    # xsol = x0*np.cos(omegax*tsol) + vx0/omegax*np.sin(omegax*tsol)           #soluzioni analitiche posizione x e y 
 
-    vxsol  = -omegax*x0*np.sin(omegax*tsol) + vx0*np.cos(omegax*tsol)           #soluzioni a. velocità
+    # vxsol  = -omegax*x0*np.sin(omegax*tsol) + vx0*np.cos(omegax*tsol)           #soluzioni a. velocità
 
     # ysol = tsol*0
     # asol = tsol*0
@@ -147,4 +143,5 @@ def CorpoMolla():
     # # calcola la soluzione esatta del sistema
     # universo.sol_a =  np.vstack((xsol, ysol, asol, vxsol, vysol, wsol))  
     # print(universo.dynamic_solution.y)
+
     universo.draw("CORPO COLLEGATO AD UNA MOLLA",do_animation=True, time_ratio=1)
