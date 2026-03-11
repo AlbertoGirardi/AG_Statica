@@ -175,9 +175,10 @@ class Dampner(Force):
 
 
 
-    def calculateForce(self, body, t, u):
+    def calculateForce(self, body, t, u_):
 
         #returns the dampner force in vector form
+        u = u_[-6:]
 
         d = coord_transform_local_to_abs_u(self.attachmentBody ,u)  - self.attachment1           #vector rapresenting dampner
 
